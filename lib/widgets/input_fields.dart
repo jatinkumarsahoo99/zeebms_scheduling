@@ -973,6 +973,109 @@ class InputFields {
     );
   }
 
+  static Widget formField1WidthBox1(
+      {required String hintTxt,
+      required TextEditingController controller,
+      required double widthRatio,
+      double? height,
+      double? paddingLeft,
+      bool capital = false,
+      bool? isEnable,
+      int? maxLen,
+      FocusNode? focus,
+      Function? onChange}) {
+    // var data = 0.obs;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: paddingLeft ?? 10),
+          child: LabelText.style(hint: hintTxt),
+        ),
+        GestureDetector(
+          onDoubleTap: (){
+            controller.selection = TextSelection(
+                baseOffset: 0, extentOffset: controller.text.length);
+          },
+          child: Container(
+            // padding: const EdgeInsets.only(
+            //     top: 6.0,
+            //     bottom: 6.0),
+            margin: EdgeInsets.only(left: paddingLeft ?? 10),
+            height: height ?? SizeDefine.heightInputField,
+            width: Get.width * widthRatio,
+            alignment: Alignment.topLeft,
+            child: TextField(
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(
+                    maxLen ?? SizeDefine.maxcharlimit),
+                capital
+                    ? UpperCaseTextFormatter()
+                    : FilteringTextInputFormatter.deny(RegExp(''))
+              ],
+              expands: true,
+              focusNode: focus,
+              textCapitalization: capital
+                  ? TextCapitalization.characters
+                  : TextCapitalization.none,
+              enabled: isEnable ?? true,
+              maxLength: maxLen ?? SizeDefine.maxcharlimit,
+              maxLines: null,
+              minLines: null,
+              textAlignVertical: TextAlignVertical.top,
+              keyboardType: TextInputType.multiline,
+              textAlign: TextAlign.left,
+              // minLines: 2,
+              controller: controller,
+              style: TextStyle(fontSize: 12),
+              onChanged: (val) {
+                if (onChange != null) {
+                  onChange(val);
+                }
+                if (val.contains(RegExp(r'<[^>]*>')) ?? false) {
+                  // return 'Please enter a valid input.';
+                  LoadingDialog.showErrorDialog("Please enter a valid input");
+                  controller.text = "";
+                }
+              },
+              decoration: InputDecoration(
+                  errorBorder: InputBorder.none,
+                  // hintText: "dd/MM/yyyy",
+                  contentPadding: const EdgeInsets.only(
+                    left: 10,
+                    top: 10,
+                  ),
+                  // labelText: hintTxt,
+                  counterText: "",
+                  labelStyle: TextStyle(
+                      fontSize: SizeDefine.labelSize, color: Colors.black),
+                  border: InputBorder.none,
+
+                  // suffixIcon: Icon(
+                  //   Icons.calendar_today,
+                  //   size: 14,
+                  //   color: Colors.deepPurpleAccent,
+                  // ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.deepPurpleAccent),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.deepPurpleAccent),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(0),
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.always),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   static Padding formFieldNumberMask({
     required String hintTxt,
     required TextEditingController controller,
