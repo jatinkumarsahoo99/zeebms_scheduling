@@ -221,7 +221,8 @@ class SalesAuditNewController extends GetxController {
       }, cancel: () {
         Get.back();
       });
-    } else {
+    }
+    else {
       if (gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
                   .cells['telecastTime']?.value !=
               null &&
@@ -249,6 +250,7 @@ class SalesAuditNewController extends GetxController {
               .cells['programCode']?.value = "";
           gridStateManagerLeft?.rows[gridStateManagerLeft?.currentRowIdx ?? 0]
               .cells['rownumber']?.value = "";
+          filerStateManagerData(gridStateManagerLeft);
           gridStateManagerLeft?.notifyListeners();
         }, cancel: () {
           Get.back();
