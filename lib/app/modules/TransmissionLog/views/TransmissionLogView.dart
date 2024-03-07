@@ -1194,7 +1194,7 @@ class TransmissionLogView extends StatelessWidget {
                               // maxLines: 2000,
                               maxLen: 999999,
                               controller: controller.txId_),*/
-                          InputFields.formField1WidthBox(
+                          InputFields.formField1WidthBox1(
                             widthRatio: 0.44,
                             paddingLeft: 5,
                             hintTxt: "TX Id",
@@ -1268,7 +1268,7 @@ class TransmissionLogView extends StatelessWidget {
                                 // LoadingDialog.call();
                                 // controller.btnFastInsert_Add_Click();
                                 LoadingDialog.call();
-                                Future.delayed(Duration(seconds: 1), () {
+                                Future.delayed(Duration(milliseconds: 100), () {
                                   controller.btnFastInsert_Add_Click();
                                 });
                               },
@@ -1457,7 +1457,7 @@ class TransmissionLogView extends StatelessWidget {
                                         // controller.tblFastInsert
                                         //     ?.setCurrentCell(tap.cell, tap.rowIdx);
                                         LoadingDialog.call();
-                                        Future.delayed(Duration(seconds: 2),
+                                        Future.delayed(Duration(milliseconds: 100),
                                             () {
                                           /*controller.btnFastInsert_Add_Click1(
                                               tap.rowIdx);*/
@@ -2496,7 +2496,8 @@ class TransmissionLogView extends StatelessWidget {
                               // width: 500,
                               width: Get.width * 0.49,
                               height: Get.height * 0.53,
-                              child: (controller.transmissionLog != null)
+                              child: (controller.transmissionLog != null &&
+                                      controller.verifyListModel != null)
                                   ? DataGridFromMap(
                                       hideCode: false,
                                       formatDate: false,
@@ -2526,9 +2527,16 @@ class TransmissionLogView extends StatelessWidget {
                                           .map((e) => e.toJson())
                                           .toList())!)
                                   // _dataTable3()
-                                  : const WarningBox(
-                                      text:
-                                          'Enter Location, Channel & Date to get the Break Definitions'),
+                                  : Expanded(
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey.shade400,
+                                              width: 1,
+                                            ),
+                                          ),
+                                      ),
+                                    ),
                             );
                           }),
                       GetBuilder<TransmissionLogController>(

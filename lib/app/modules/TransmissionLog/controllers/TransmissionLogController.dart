@@ -166,7 +166,7 @@ class TransmissionLogController extends GetxController {
   BuildContext? contextGrid;
   RxBool insertPopupOpen = RxBool(false);
   RxString selectMultiSa = RxString("Tx Log");
-  FocusNode keyboardFocus=FocusNode();
+  FocusNode keyboardFocus = FocusNode();
 
   @override
   void onInit() {
@@ -305,7 +305,9 @@ class TransmissionLogController extends GetxController {
           } else if (map is String) {
             Snack.callError(map.toString());
           } else {
-            LoadingDialog.callInfoMessage("No data found");
+            if (fun != null) {
+              fun();
+            }
           }
 
           /* channels.clear();
@@ -1448,7 +1450,8 @@ class TransmissionLogController extends GetxController {
             value: num.tryParse(dr.cells["duration"]?.value) ?? 0),
         dr.cells["som"]?.value,
         dr.cells["promoTypeCode"]?.value,
-        dr.cells["segmentNumber"]?.value.toString() ?? "");
+        dr.cells["segmentNumber"]?.value.toString() ?? "",
+        needLoading: false);
 
     // Adding Tags for promos
     // GoTo hell
@@ -1615,16 +1618,18 @@ class TransmissionLogController extends GetxController {
   }
 
   void setInsertRowFastInsert(
-      String FpcTime,
-      String EventType,
-      String ExportTapeCaption,
-      String Exporttapecode,
-      String Tapeduration,
-      String SOM,
-      String Promotypecode,
-      String BreakNumber,
-      {bool? dontSave,
-      bool? needUndo = true}) {
+    String FpcTime,
+    String EventType,
+    String ExportTapeCaption,
+    String Exporttapecode,
+    String Tapeduration,
+    String SOM,
+    String Promotypecode,
+    String BreakNumber, {
+    bool? dontSave,
+    bool? needUndo = true,
+    bool? needLoading = true,
+  }) {
     int intRowIndex = gridStateManager?.currentRowIdx ?? 0;
     int InsertRow =
         int.tryParse(gridStateManager?.currentRow?.cells["rownumber"]?.value) ??
@@ -1717,7 +1722,7 @@ class TransmissionLogController extends GetxController {
     // gridStateManager?.setCurrentCell(gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
     // gridStateManager?.setCurrentCell(
     //     gridStateManager?.rows[intRowIndex + 1].cells[1], intRowIndex + 1);
-    Get.back();
+    if (needLoading ?? false) Get.back();
   }
 
   void btnReplace_GetEvent_Click() {
@@ -4793,13 +4798,17 @@ class TransmissionLogController extends GetxController {
       }
     }*/
     else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "y") {
-      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
+      if (completerDialog != null &&
+          dialogWidget != null &&
+          canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(true);
       }
     } else if (raw is RawKeyDownEvent && raw.character?.toLowerCase() == "n") {
-      if (completerDialog != null && dialogWidget != null && canDialogShow.value) {
+      if (completerDialog != null &&
+          dialogWidget != null &&
+          canDialogShow.value) {
         dialogWidget = null;
         canDialogShow.value = false;
         completerDialog?.complete(false);
