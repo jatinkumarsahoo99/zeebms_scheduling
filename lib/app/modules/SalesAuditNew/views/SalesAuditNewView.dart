@@ -313,9 +313,9 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             // checkRow: true,
                                             // checkRowKey: "no",
                                             mode: PlutoGridMode.normal,
-                                            editKeys: const ["remarks"],
+                                            editKeys:  ["remarks"],
                                             onEdit: (PlutoGridOnChangedEvent ev){
-
+                                              controller.gridStateManagerLeft?.notifyListeners();
 
                                             },
 
