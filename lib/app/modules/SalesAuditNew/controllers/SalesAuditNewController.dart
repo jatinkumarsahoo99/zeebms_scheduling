@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:bms_scheduling/app/data/DropDownValue.dart';
 import 'package:bms_scheduling/app/modules/RoCancellation/bindings/ro_cancellation_doc.dart';
+import 'package:bms_scheduling/app/providers/extensions/datagrid.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/PlutoGrid/pluto_grid.dart';
@@ -437,42 +438,55 @@ class SalesAuditNewController extends GetxController {
     // tblSpots - listAsrunLog2 - leftIndex - gridStateManagerLeft
     // tblAsrun - listAsrunLog1 - rightindex - gridStateManagerRight
 
-    LoadingDialog.call();
-    Map<String, dynamic> postData = {
-      "locationcode": selectedLocation?.key ?? "",
-      "channelcode": selectedChannel?.key ?? "",
-      "loggedUsercode": Get.find<MainController>().user?.logincode ?? "",
-      "date": DateFormat("yyyy-MM-ddTHH:mm:ss")
-          .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
-      // "lstspots": masterListAsrunLog2.map((e) => e.toJson1()).toList(),
-      "lstspots": getDataFromGrid1(gridStateManagerLeft),
-      // "lstasrun": masterListAsrunLog1.map((e) => e.toJson1()).toList(),
-      "lstasrun": getDataFromGrid(gridStateManagerRight),
-    };
+    try {
+      // gridStateManagerLeft?.setKeepFocus(false);
+      gridStateManagerLeft?.moveCurrentCell(PlutoMoveDirection.right,force: true);
+      gridStateManagerRight?.moveCurrentCell(PlutoMoveDirection.right,force: true);
+      LoadingDialog.call();
+      Future.delayed(const Duration(seconds: 2),() {
+        Map<String, dynamic> postData = {
+          "locationcode": selectedLocation?.key ?? "",
+          "channelcode": selectedChannel?.key ?? "",
+          "loggedUsercode": Get
+              .find<MainController>()
+              .user
+              ?.logincode ?? "",
+          "date": DateFormat("yyyy-MM-ddTHH:mm:ss")
+              .format(DateFormat("dd-MM-yyyy").parse(scheduledController.text)),
+          // "lstspots": masterListAsrunLog2.map((e) => e.toJson1()).toList(),
+          "lstspots": getDataFromGrid1(gridStateManagerLeft),
+          // "lstasrun": masterListAsrunLog1.map((e) => e.toJson1()).toList(),
+          "lstasrun": getDataFromGrid(gridStateManagerRight),
+        };
 
-    // print(">>>>>>postData${jsonEncode(postData)}");
-    Get.find<ConnectorControl>().POSTMETHOD(
-      api: ApiFactory.SALESAUDIT_NEW_SAVEDATA,
-      // api: "",
-      json: postData,
-      fun: (map) {
-        Get.back();
-        print(">>>>>map$map");
-        if (map is Map && map.containsKey("postSalesAduit")) {
-          LoadingDialog.callDataSavedMessage((map['postSalesAduit'] ?? ""),
-              callback: () {
-            // clearAll();
-            // Get.back();
+        // print(">>>>>>postData${jsonEncode(postData)}");
+        Get.find<ConnectorControl>().POSTMETHOD(
+          api: ApiFactory.SALESAUDIT_NEW_SAVEDATA,
+          // api: "",
+          json: postData,
+          fun: (map) {
+            Get.back();
+            print(">>>>>map$map");
+            if (map is Map && map.containsKey("postSalesAduit")) {
+              LoadingDialog.callDataSavedMessage((map['postSalesAduit'] ?? ""),
+                  callback: () {
+                    // clearAll();
+                    // Get.back();
+                    callGetRetrieve();
+                  });
+            } else {
+              LoadingDialog.showErrorDialog((map ?? "").toString(), callback: () {
                 callGetRetrieve();
-          });
-        } else {
-          LoadingDialog.showErrorDialog((map ?? "").toString(),callback: (){
-            callGetRetrieve();
-          });
-          // Snack.callError((map ?? "").toString());
-        }
-      },
-    );
+              });
+              // Snack.callError((map ?? "").toString());
+            }
+          },
+        );
+      },);
+
+    }catch(e){
+      print("???????exeception${e}");
+    }
   }
 
   List<Map<String, dynamic>> getDataFromGrid(
@@ -1374,7 +1388,7 @@ class SalesAuditNewController extends GetxController {
 
   @override
   void onInit() {
-    leftFocusNode.addListener(() {
+    /*leftFocusNode.addListener(() {
       if (leftFocusNode.hasFocus) {
         leftTblFocus = true;
       } else {
@@ -1387,7 +1401,7 @@ class SalesAuditNewController extends GetxController {
       } else {
         rightTblFocus = false;
       }
-    });
+    });*/
     super.onInit();
   }
 
