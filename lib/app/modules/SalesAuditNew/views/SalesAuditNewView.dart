@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bms_scheduling/app/providers/extensions/datagrid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -313,9 +314,10 @@ class SalesAuditNewView  extends StatelessWidget  {
                                             // checkRow: true,
                                             // checkRowKey: "no",
                                             mode: PlutoGridMode.normal,
-                                            editKeys: const ["remarks"],
+                                            editKeys:  ["remarks"],
                                             onEdit: (PlutoGridOnChangedEvent ev){
-
+                                              print(">>>>>>>>>>>val from edit "+ev.value);
+                                              controller.gridStateManagerLeft?.notifyListeners();
 
                                             },
 
@@ -417,7 +419,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                 },
                                                 editKeys: const ["remark"],
                                                 onEdit: (PlutoGridOnChangedEvent ev){
-
+                                                  controller.gridStateManagerRight?.notifyListeners();
 
                                                 },
                                                 colorCallback: (PlutoRowColorContext colorData){
@@ -465,6 +467,7 @@ class SalesAuditNewView  extends StatelessWidget  {
                                                     controller.gridStateManagerRight?.moveCurrentCellByRowIdx(controller.selectedRightIndex??0,
                                                         PlutoMoveDirection.down);
                                                   }
+                                                  print("on load call");
 
 
 
@@ -500,6 +503,9 @@ class SalesAuditNewView  extends StatelessWidget  {
                               showIcon: false,
                               // isEnabled: btn['isDisabled'],
                               callback: (){
+                                controller.gridStateManagerLeft?.moveCurrentCell(PlutoMoveDirection.right,force: true);
+                                // controller.gridStateManagerLeft?.rows[controller.gridStateManagerLeft?.currentRowIdx??0].cells['remarks']?.value = ;
+                                // controller.gridStateManagerLeft?.removeCellFocus();
                                 // controller.gridStateManagerLeft?.setFilter((element) => true);
                                 // controller.gridStateManagerLeft?.notifyListeners();
                               },
@@ -649,3 +655,4 @@ class SalesAuditNewView  extends StatelessWidget  {
 
 
 }
+
