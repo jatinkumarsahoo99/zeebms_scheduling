@@ -909,7 +909,7 @@ class FillerMasterController extends GetxController {
           callback: () {
         eomFN.requestFocus();
       });
-    } else if (selectedDropDowns[3] == null) {
+    } else if (selectedTapeType.value == null) {
       LoadingDialog.showErrorDialog("Tape Type cannot be empty.");
     } else if (selectedDropDowns[4] == null) {
       LoadingDialog.showErrorDialog("Filler Type cannot be empty.");
@@ -971,7 +971,7 @@ class FillerMasterController extends GetxController {
           "bannerCode": selectedDropDowns[2]?.key,
           "languageCode": selectedDropDowns[6]?.key,
           "censorshipCode": selectedDropDowns[5]?.key,
-          "tapeTypeCode": selectedDropDowns[3]?.key,
+          "tapeTypeCode": selectedTapeType.value?.key,
           "exportTapeCode": tapeIDCtr.text,
           "exportTapeCaption": "F/${txCaptionCtr.text}",
           "blackWhite": selectedDropDowns[8]?.key,
