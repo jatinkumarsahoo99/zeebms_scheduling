@@ -99,7 +99,6 @@ class NewShortContentFormController extends GetxController {
   void calculateDuration() {
     num secondSom = Utils.oldBMSConvertToSecondsValue(value: (som.text));
     num secondEom = Utils.oldBMSConvertToSecondsValue(value: eom.text);
-
     if (eom.text.length >= 11) {
       if ((secondEom - secondSom) < 0) {
         LoadingDialog.showErrorDialog("EOM should not be less than SOM.",
@@ -111,15 +110,28 @@ class NewShortContentFormController extends GetxController {
             Utils.convertToTimeFromDouble(value: secondEom - secondSom);
         duration.value =
             Utils.convertToTimeFromDouble(value: secondEom - secondSom);
-
         sec = Utils.oldBMSConvertToSecondsValue(
             value: durationController.value.text);
       }
     }
-
     print(">>>>>>>>>" + durationController.value.text);
     print(">>>>>>>>>" + sec.toString());
   }
+
+  // calculateDuration({bool showDialog = true}) {
+  //   var diff = (Utils.oldBMSConvertToSecondsValue(value: eom.text) -
+  //       Utils.oldBMSConvertToSecondsValue(value: som.text));
+
+  //   if (diff.isNegative && showDialog) {
+  //     eom.clear();
+  //     LoadingDialog.showErrorDialog("EOM should not less than SOM",
+  //         callback: () {
+  //       eomFN.requestFocus();
+  //     });
+  //   } else {
+  //     duration.value = Utils.convertToTimeFromDouble(value: diff);
+  //   }
+  // }
 
   Future<void> getChannel(locationCode) async {
     await Get.find<ConnectorControl>().GETMETHODCALL(
@@ -813,21 +825,11 @@ class NewShortContentFormController extends GetxController {
     //     }
     //   }
     // });
-    // eomFN.addListener(() {
-    //   if (!eomFN.hasFocus) {
-    //     if (eom.value == "" &&
-    //         eom.value == "00:00:00:00" &&
-    //         (!(Get.isDialogOpen ?? false))) {
-    //       LoadingDialog.callErrorMessage1(
-    //           msg: "Please enter som",
-    //           callback: () {
-    //             eomFN.requestFocus();
-    //           });
-    //     }else{
-    //       calculateDuration();
-    //     }
-    //   }
-    // });
+    eomFN.addListener(() {
+      if (!eomFN.hasFocus) {
+        calculateDuration();
+      }
+    });
   }
 
   @override
