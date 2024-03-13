@@ -522,6 +522,7 @@ class PromoMasterController extends GetxController {
     tcInCtr.text = "00:00:00:00";
     tcOutCtr.text = "00:00:00:00";
     segNoCtr.text = "1";
+    selectedTapeType.value = null;
     selectedDropDowns = List.generate(12, (index) => null);
     if (onloadModel?.promoMasterOnLoad?.company != null &&
         onloadModel!.promoMasterOnLoad!.company!.isNotEmpty) {
