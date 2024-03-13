@@ -49,6 +49,7 @@ class PromoMasterController extends GetxController {
   /// 11=>event
   late List<DropDownValue?> selectedDropDowns;
   List<PermissionModel>? formPermissions;
+  Rxn<DropDownValue2> selectedTapeType = Rxn<DropDownValue2>();
 
   var rightDataTable = <LstAnnotationLoadDatas>[].obs;
   String promoCode = "",
@@ -120,143 +121,143 @@ class PromoMasterController extends GetxController {
     super.onReady();
     initailAPICall();
     addListeners2();
-    captionFN.addListener(() {
-      if (!captionFN.hasFocus) {
-        if (captionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter caption",callback: (){
-            captionFN.requestFocus();
-          });
-        }
-      }
-    });
-    txCapFN.addListener(() {
-      if (!txCapFN.hasFocus) {
-        if (txCaptionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx caption",callback: (){
-            txCapFN.requestFocus();
-          });
-        }
-      }
-    });
-    tapeIDFN.addListener(() {
-      if (!tapeIDFN.hasFocus) {
-        if (tapeIDCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tape id",callback: (){
-            tapeIDFN.requestFocus();
-          });
-        }
-      }
-    });
-    txNoFN.addListener(() {
-      if (!txNoFN.hasFocus) {
-        if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx no",callback: (){
-            txNoFN.requestFocus();
-          });
-        }
-      }
-    });
-    somFN.addListener(() {
-      if (!somFN.hasFocus) {
-        if (somCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter som",callback: (){
-            somFN.requestFocus();
-          });
-        }
-      }
-    });
-    txNoFN.addListener(() {
-      if (!txNoFN.hasFocus) {
-        if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter tx no",callback: (){
-            txNoFN.requestFocus();
-          });
-        }
-      }
-    });
-    categoryFN.addListener(() {
-      if (!categoryFN.hasFocus) {
-        if (selectedDropDowns[0] == null &&
-            !isCatOpen &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select category",callback: (){
-            categoryFN.requestFocus();
-          });
-          // locationFN.requestFocus();
-        }
-      }
-    });
-    companyFN.addListener(() {
-      if (!companyFN.hasFocus) {
-        if (selectedDropDowns[1] == null &&
-            !isCompOpen &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select company",callback: (){
-            companyFN.requestFocus();
-          });
-          // locationFN.requestFocus();
-        }
-      }
-    });
-    locationFN.addListener(() {
-      if (!locationFN.hasFocus) {
-        if (selectedDropDowns[2] == null &&
-            !isLocOpen &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select location",callback: (){
-            locationFN.requestFocus();
-          });
-          // locationFN.requestFocus();
-        }
-      }
-    });
-    chnlFN.addListener(() {
-      if (!chnlFN.hasFocus) {
-        if (channelList.value!=null && selectedDropDowns[3] == null &&
-            !isChnlOpen &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select channel",callback: (){
-            chnlFN.requestFocus();
-          });
-          // locationFN.requestFocus();
-        }
-      }
-    });
-    pTypFN.addListener(() {
-      if (!pTypFN.hasFocus) {
-        if (selectedDropDowns[5] == null &&
-            !isPtypOpen &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select p-type",callback: (){
-            pTypFN.requestFocus();
-          });
-          // locationFN.requestFocus();
-        }
-      }
-    });
-    billFN.addListener(() {
-      if (!billFN.hasFocus) {
-        if (selectedDropDowns[9] == null &&
-            !isBillOpen &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select billing",callback: (){
-            billFN.requestFocus();
-          });
-          // locationFN.requestFocus();
-        }
-      }
-    });
-    tapeTypFN.addListener(() {
-      if (!tapeTypFN.hasFocus) {
-        if (selectedDropDowns[10] == null &&
-            !isTapTypOpen &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please select tape type",callback: (){
-            tapeTypFN.requestFocus();
-          });
-        }
-      }
-    });
+    // captionFN.addListener(() {
+    //   if (!captionFN.hasFocus) {
+    //     if (captionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please enter caption",callback: (){
+    //         captionFN.requestFocus();
+    //       });
+    //     }
+    //   }
+    // });
+    // txCapFN.addListener(() {
+    //   if (!txCapFN.hasFocus) {
+    //     if (txCaptionCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please enter tx caption",callback: (){
+    //         txCapFN.requestFocus();
+    //       });
+    //     }
+    //   }
+    // });
+    // tapeIDFN.addListener(() {
+    //   if (!tapeIDFN.hasFocus) {
+    //     if (tapeIDCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please enter tape id",callback: (){
+    //         tapeIDFN.requestFocus();
+    //       });
+    //     }
+    //   }
+    // });
+    // txNoFN.addListener(() {
+    //   if (!txNoFN.hasFocus) {
+    //     if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please enter tx no",callback: (){
+    //         txNoFN.requestFocus();
+    //       });
+    //     }
+    //   }
+    // });
+    // somFN.addListener(() {
+    //   if (!somFN.hasFocus) {
+    //     if (somCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please enter som",callback: (){
+    //         somFN.requestFocus();
+    //       });
+    //     }
+    //   }
+    // });
+    // txNoFN.addListener(() {
+    //   if (!txNoFN.hasFocus) {
+    //     if (txNoCtr.text == "" && (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please enter tx no",callback: (){
+    //         txNoFN.requestFocus();
+    //       });
+    //     }
+    //   }
+    // });
+    // categoryFN.addListener(() {
+    //   if (!categoryFN.hasFocus) {
+    //     if (selectedDropDowns[0] == null &&
+    //         !isCatOpen &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please select category",callback: (){
+    //         categoryFN.requestFocus();
+    //       });
+    //       // locationFN.requestFocus();
+    //     }
+    //   }
+    // });
+    // companyFN.addListener(() {
+    //   if (!companyFN.hasFocus) {
+    //     if (selectedDropDowns[1] == null &&
+    //         !isCompOpen &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please select company",callback: (){
+    //         companyFN.requestFocus();
+    //       });
+    //       // locationFN.requestFocus();
+    //     }
+    //   }
+    // });
+    // locationFN.addListener(() {
+    //   if (!locationFN.hasFocus) {
+    //     if (selectedDropDowns[2] == null &&
+    //         !isLocOpen &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please select location",callback: (){
+    //         locationFN.requestFocus();
+    //       });
+    //       // locationFN.requestFocus();
+    //     }
+    //   }
+    // });
+    // chnlFN.addListener(() {
+    //   if (!chnlFN.hasFocus) {
+    //     if (channelList.value!=null && selectedDropDowns[3] == null &&
+    //         !isChnlOpen &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please select channel",callback: (){
+    //         chnlFN.requestFocus();
+    //       });
+    //       // locationFN.requestFocus();
+    //     }
+    //   }
+    // });
+    // pTypFN.addListener(() {
+    //   if (!pTypFN.hasFocus) {
+    //     if (selectedDropDowns[5] == null &&
+    //         !isPtypOpen &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please select p-type",callback: (){
+    //         pTypFN.requestFocus();
+    //       });
+    //       // locationFN.requestFocus();
+    //     }
+    //   }
+    // });
+    // billFN.addListener(() {
+    //   if (!billFN.hasFocus) {
+    //     if (selectedDropDowns[9] == null &&
+    //         !isBillOpen &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please select billing",callback: (){
+    //         billFN.requestFocus();
+    //       });
+    //       // locationFN.requestFocus();
+    //     }
+    //   }
+    // });
+    // tapeTypFN.addListener(() {
+    //   if (!tapeTypFN.hasFocus) {
+    //     if (selectedDropDowns[10] == null &&
+    //         !isTapTypOpen &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please select tape type",callback: (){
+    //         tapeTypFN.requestFocus();
+    //       });
+    //     }
+    //   }
+    // });
   }
 
   UserDataSettings? userDataSettings;
@@ -267,6 +268,46 @@ class PromoMasterController extends GetxController {
   }
 
   addListeners2() {
+    captionFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          captionLeave();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    tapeIDFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          tapeIdLeave();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    txNoFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          txNoLeave();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    blanktapeIdFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          onleaveBlankTapeID();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
+    eomFN.onKey = (node, event) {
+      if (event.logicalKey == LogicalKeyboardKey.tab) {
+        if (!event.isShiftPressed) {
+          calculateDuration();
+        }
+      }
+      return KeyEventResult.ignored;
+    };
     // rightTableFN.onKey = (focus, event) {
     //   if (event.isKeyPressed(LogicalKeyboardKey.delete)) {
     //     if (rightTableSelectedIdx != -1) {
@@ -277,68 +318,36 @@ class PromoMasterController extends GetxController {
     //   }
     //   return KeyEventResult.ignored;
     // };
-    captionFN.onKey = (node, event) {
-      if (event.logicalKey == LogicalKeyboardKey.tab) {
-        if (!event.isShiftPressed) {
-          captionLeave();
-        }
-      }
-      return KeyEventResult.ignored;
-    };
     // captionFN.addListener(() {
     //   if (!captionFN.hasFocus) {
     //     captionLeave();
     //   }
     // });
-    tapeIDFN.onKey = (node, event) {
-      if (event.logicalKey == LogicalKeyboardKey.tab) {
-        if (!event.isShiftPressed) {
-          tapeIdLeave();
-        }
-      }
-      return KeyEventResult.ignored;
-    };
     // tapeIDFN.addListener(() {
     //   if (!tapeIDFN.hasFocus) {
     //     tapeIdLeave();
     //   }
     // });
-    txNoFN.onKey = (node, event) {
-      if (event.logicalKey == LogicalKeyboardKey.tab) {
-        if (!event.isShiftPressed) {
-          txNoLeave();
-        }
-      }
-      return KeyEventResult.ignored;
-    };
     // txNoFN.addListener(() {
     //   if (!txNoFN.hasFocus && !Get.isDialogOpen!) {
     //     txNoLeave();
     //   }
     // });
-    blanktapeIdFN.onKey = (node, event) {
-      if (event.logicalKey == LogicalKeyboardKey.tab) {
-        if (!event.isShiftPressed) {
-          onleaveBlankTapeID();
-        }
-      }
-      return KeyEventResult.ignored;
-    };
     // blanktapeIdFN.addListener(() {
     //   if (!blanktapeIdFN.hasFocus) {
     //     onleaveBlankTapeID();
     //   }
     // });
-    eomFN.addListener(() {
-      if (!eomFN.hasFocus) {
-        if ((txCaptionCtr.text == "" || txCaptionCtr.text == "00:00:00:00") &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(msg: "Please enter eom");
-        } else {
-          calculateDuration();
-        }
-      }
-    });
+    // eomFN.addListener(() {
+    //   if (!eomFN.hasFocus) {
+    //     if ((txCaptionCtr.text == "" || txCaptionCtr.text == "00:00:00:00") &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(msg: "Please enter eom");
+    //     } else {
+    //       calculateDuration();
+    //     }
+    //   }
+    // });
     // somFN.addListener(() {
     //   if (!somFN.hasFocus && !Get.isDialogOpen!) {
     //     calculateDuration();
@@ -514,6 +523,10 @@ class PromoMasterController extends GetxController {
     tcOutCtr.text = "00:00:00:00";
     segNoCtr.text = "1";
     selectedDropDowns = List.generate(12, (index) => null);
+    if (onloadModel?.promoMasterOnLoad?.company != null &&
+        onloadModel!.promoMasterOnLoad!.company!.isNotEmpty) {
+      selectedDropDowns[1] = onloadModel!.promoMasterOnLoad!.company![0];
+    }
     updateUI();
     captionFN.requestFocus();
   }
@@ -691,7 +704,7 @@ class PromoMasterController extends GetxController {
                 ?.firstWhereOrNull(
                     (element) => element.key == record.tapeTypeCode);
             if (tempTapetype != null) {
-              selectedDropDowns[10] = tempTapetype;
+              selectedTapeType.value = tempTapetype;
             }
           }
 
@@ -716,6 +729,10 @@ class PromoMasterController extends GetxController {
                   (element) => element.key == record.channelCode);
               if (tempChannel2 != null) {
                 selectedDropDowns[3] = tempChannel2;
+              } else {
+                LoadingDialog.callErrorMessage1(
+                    msg:
+                        "You do not have required channel rights. Please contact support team.");
               }
             });
           }
@@ -896,6 +913,10 @@ class PromoMasterController extends GetxController {
         closeDialogIfOpen();
         onloadModel = PromoMasterOnloadModel.fromJson(resp);
         if (onloadModel?.promoMasterOnLoad != null) {
+          if (onloadModel?.promoMasterOnLoad?.company != null &&
+              onloadModel!.promoMasterOnLoad!.company!.isNotEmpty) {
+            selectedDropDowns[1] = onloadModel!.promoMasterOnLoad!.company![0];
+          }
           updateUI();
           captionFN.requestFocus();
         }

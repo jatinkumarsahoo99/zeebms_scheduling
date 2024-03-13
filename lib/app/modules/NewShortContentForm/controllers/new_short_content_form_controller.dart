@@ -17,7 +17,7 @@ class NewShortContentFormController extends GetxController {
   var categeroies = RxList<DropDownValue2>([]);
   var formIdCategeroies = RxList<DropDownValue>([]);
 
-  var tapes = RxList<DropDownValue>([]);
+  var tapes = RxList<DropDownValue2>([]);
   var orgRepeats = RxList<DropDownValue>([]);
   Rx<TextEditingController> durationController = TextEditingController().obs;
   RxString duration = RxString("00:00:00:00");
@@ -49,7 +49,7 @@ class NewShortContentFormController extends GetxController {
   Rxn<DropDownValue> selectedType = Rxn<DropDownValue>();
   Rxn<DropDownValue2> selectedCategory = Rxn<DropDownValue2>();
   Rxn<DropDownValue> selectedProgram = Rxn<DropDownValue>();
-  Rxn<DropDownValue> selectedTape = Rxn<DropDownValue>();
+  Rxn<DropDownValue2> selectedTape = Rxn<DropDownValue2>();
   Rxn<DropDownValue> selectedOrgRep = Rxn<DropDownValue>();
 
   TextEditingController caption = TextEditingController(),
@@ -142,10 +142,14 @@ class NewShortContentFormController extends GetxController {
           fun: (rawdata) {
             if (rawdata is Map && rawdata.containsKey("infoStillType")) {
               tapes.value = [];
-              for (var category in rawdata["infoStillType"]) {
-                tapes.add(DropDownValue(
-                    key: category["tapetypecode"],
-                    value: category["tapeTypeName"]));
+              for (var data in rawdata["infoStillType"]) {
+                tapes.add(
+                  DropDownValue2(
+                    key: data["tapetypecode"],
+                    value: data["tapeTypeName"],
+                    type: data['isActive'].toString(),
+                  ),
+                );
               }
             }
           });
@@ -156,10 +160,14 @@ class NewShortContentFormController extends GetxController {
           fun: (rawdata) {
             if (rawdata is Map && rawdata.containsKey("infoSlideTypes")) {
               tapes.value = [];
-              for (var category in rawdata["infoSlideTypes"]) {
-                tapes.add(DropDownValue(
-                    key: category["tapetypecode"],
-                    value: category["tapeTypeName"]));
+              for (var data in rawdata["infoSlideTypes"]) {
+                tapes.add(
+                  DropDownValue2(
+                    key: data["tapetypecode"],
+                    value: data["tapeTypeName"],
+                    type: data['isActive'].toString(),
+                  ),
+                );
               }
             }
           });
@@ -280,10 +288,20 @@ class NewShortContentFormController extends GetxController {
                     element.key?.toLowerCase() ==
                     (data["Locationcode"] ?? "").toLowerCase());
                 getChannel(data["Locationcode"]).then((value) {
-                  selectedChannel.value = channels.firstWhereOrNull((element) {
-                    return element.key?.toLowerCase() ==
-                        (data["Channelcode"] ?? "").toLowerCase();
-                  });
+                  // selectedChannel.value = channels.firstWhereOrNull((element) {
+                  //   return element.key?.toLowerCase() ==
+                  //       (data["Channelcode"] ?? "").toLowerCase();
+                  // });
+                  var tempChannel = channels.firstWhereOrNull((element) =>
+                      element.key?.toLowerCase() ==
+                      (data["Channelcode"] ?? "").toLowerCase());
+                  if (tempChannel != null) {
+                    selectedChannel.value = tempChannel;
+                  } else {
+                    LoadingDialog.callErrorMessage1(
+                        msg:
+                            "You do not have required channel rights. Please contact support team.");
+                  }
                 });
                 typeleave(selectedCategory.value?.type).then((value) {
                   selectedTape.value = tapes.firstWhereOrNull((element) =>
@@ -453,6 +471,8 @@ class NewShortContentFormController extends GetxController {
       LoadingDialog.showErrorDialog("Location cannot be empty.");
     } else if (selectedChannel.value?.key == null) {
       LoadingDialog.showErrorDialog("Channel cannot be empty.");
+    } else if (selectedCategory.value?.key == null) {
+      LoadingDialog.showErrorDialog("Category cannot be empty.");
     } else if (som.text.trim().isEmpty) {
       LoadingDialog.showErrorDialog("Please enter SOM.");
     } else if (eom.text.trim().isEmpty || eom.text.trim() == "00:00:00:00") {
@@ -716,75 +736,74 @@ class NewShortContentFormController extends GetxController {
     });
     super.onInit();
 
-    locationFocusNode.addListener(() {
-      if (!locationFocusNode.hasFocus) {
-        if (locations.value != null &&
-            !isLocOpen &&
-            selectedLocation.value == null &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(
-              msg: "Please select location",
-              callback: () {
-                locationFocusNode.requestFocus();
-              });
-        }
-      }
-    });
-
-    channelFocusNode.addListener(() {
-      if (!channelFocusNode.hasFocus) {
-        if (!isChnlOpen &&
-            selectedChannel.value == null &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(
-              msg: "Please select channel",
-              callback: () {
-                channelFocusNode.requestFocus();
-              });
-        }
-      }
-    });
-    categoryFocusNode.addListener(() {
-      if (!categoryFocusNode.hasFocus) {
-        if (!isCatOpen &&
-            selectedCategory.value == null &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(
-              msg: "Please select category",
-              callback: () {
-                categoryFocusNode.requestFocus();
-              });
-        }
-      }
-    });
-    somFN.addListener(() {
-      if (!somFN.hasFocus) {
-        if (som.value == "" &&
-            som.value == "00:00:00:00" &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(
-              msg: "Please enter som",
-              callback: () {
-                somFN.requestFocus();
-              });
-        }
-      }
-    });
-    eomFN.addListener(() {
-      if (!eomFN.hasFocus) {
-        if (eom.value == "" &&
-            eom.value == "00:00:00:00" &&
-            (!(Get.isDialogOpen ?? false))) {
-          LoadingDialog.callErrorMessage1(
-              msg: "Please enter som",
-              callback: () {
-                eomFN.requestFocus();
-              });
-        }else{
-          calculateDuration();
-        }
-      }
-    });
+    // locationFocusNode.addListener(() {
+    //   if (!locationFocusNode.hasFocus) {
+    //     if (locations.value != null &&
+    //         !isLocOpen &&
+    //         selectedLocation.value == null &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(
+    //           msg: "Please select location",
+    //           callback: () {
+    //             locationFocusNode.requestFocus();
+    //           });
+    //     }
+    //   }
+    // });
+    // channelFocusNode.addListener(() {
+    //   if (!channelFocusNode.hasFocus) {
+    //     if (!isChnlOpen &&
+    //         selectedChannel.value == null &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(
+    //           msg: "Please select channel",
+    //           callback: () {
+    //             channelFocusNode.requestFocus();
+    //           });
+    //     }
+    //   }
+    // });
+    // categoryFocusNode.addListener(() {
+    //   if (!categoryFocusNode.hasFocus) {
+    //     if (!isCatOpen &&
+    //         selectedCategory.value == null &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(
+    //           msg: "Please select category",
+    //           callback: () {
+    //             categoryFocusNode.requestFocus();
+    //           });
+    //     }
+    //   }
+    // });
+    // somFN.addListener(() {
+    //   if (!somFN.hasFocus) {
+    //     if (som.value == "" &&
+    //         som.value == "00:00:00:00" &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(
+    //           msg: "Please enter som",
+    //           callback: () {
+    //             somFN.requestFocus();
+    //           });
+    //     }
+    //   }
+    // });
+    // eomFN.addListener(() {
+    //   if (!eomFN.hasFocus) {
+    //     if (eom.value == "" &&
+    //         eom.value == "00:00:00:00" &&
+    //         (!(Get.isDialogOpen ?? false))) {
+    //       LoadingDialog.callErrorMessage1(
+    //           msg: "Please enter som",
+    //           callback: () {
+    //             eomFN.requestFocus();
+    //           });
+    //     }else{
+    //       calculateDuration();
+    //     }
+    //   }
+    // });
   }
 
   @override
