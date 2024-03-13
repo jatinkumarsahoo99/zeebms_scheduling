@@ -363,45 +363,42 @@ class FillerMasterController extends GetxController {
     addListeneres2();
   }
 
-  void calculateDuration() {
-    num secondSom = Utils.oldBMSConvertToSecondsValue(value: (somCtr.text));
-    num secondEom = Utils.oldBMSConvertToSecondsValue(value: eomCtr.text);
-
-    if (eomCtr.text.length >= 11) {
-      if ((secondEom - secondSom) < 0) {
-        LoadingDialog.showErrorDialog("EOM should not be less than SOM.",
-            callback: () {
-          // eomFN.requestFocus();
-        });
-      } else {
-        durationController.value.text =
-            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
-        duration.value =
-            Utils.convertToTimeFromDouble(value: secondEom - secondSom);
-
-        sec = Utils.oldBMSConvertToSecondsValue(
-            value: durationController.value.text);
-      }
-    }
-
-    print(">>>>>>>>>" + durationController.value.text);
-    print(">>>>>>>>>" + sec.toString());
-  }
-
-  // calculateDuration({bool showDialog = true}) {
-  //   var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
-  //       Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
-
-  //   if (diff.isNegative && showDialog) {
-  //     eomCtr.clear();
-  //     LoadingDialog.showErrorDialog("EOM should not less than SOM",
-  //         callback: () {
-  //       eomFN.requestFocus();
-  //     });
-  //   } else {
-  //     durationCtr.text = Utils.convertToTimeFromDouble(value: diff);
+  // void calculateDuration() {
+  //   num secondSom = Utils.oldBMSConvertToSecondsValue(value: (somCtr.text));
+  //   num secondEom = Utils.oldBMSConvertToSecondsValue(value: eomCtr.text);
+  //   if (eomCtr.text.length >= 11) {
+  //     if ((secondEom - secondSom) < 0) {
+  //       LoadingDialog.showErrorDialog("EOM should not be less than SOM.",
+  //           callback: () {
+  //         // eomFN.requestFocus();
+  //       });
+  //     } else {
+  //       durationController.value.text =
+  //           Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+  //       duration.value =
+  //           Utils.convertToTimeFromDouble(value: secondEom - secondSom);
+  //       sec = Utils.oldBMSConvertToSecondsValue(
+  //           value: durationController.value.text);
+  //     }
   //   }
+  //   print(">>>>>>>>>" + durationController.value.text);
+  //   print(">>>>>>>>>" + sec.toString());
   // }
+
+  calculateDuration({bool showDialog = true}) {
+    var diff = (Utils.oldBMSConvertToSecondsValue(value: eomCtr.text) -
+        Utils.oldBMSConvertToSecondsValue(value: somCtr.text));
+
+    if (diff.isNegative && showDialog) {
+      eomCtr.clear();
+      LoadingDialog.showErrorDialog("EOM should not less than SOM",
+          callback: () {
+        eomFN.requestFocus();
+      });
+    } else {
+      duration.value = Utils.convertToTimeFromDouble(value: diff);
+    }
+  }
 
   formHandler(String btnName) {
     if (btnName == "Clear") {
@@ -455,12 +452,12 @@ class FillerMasterController extends GetxController {
       }
       return KeyEventResult.ignored;
     };
-    /*eomFN.onKey = (node, event) {
+    eomFN.onKey = (node, event) {
       if (event.logicalKey == LogicalKeyboardKey.tab && !event.isShiftPressed) {
         calculateDuration();
       }
       return KeyEventResult.ignored;
-    };*/
+    };
   }
 
   setCartNo() async {
