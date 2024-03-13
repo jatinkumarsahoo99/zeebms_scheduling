@@ -6,7 +6,9 @@ class PromoMasterOnloadModel {
   PromoMasterOnloadModel({this.promoMasterOnLoad});
 
   PromoMasterOnloadModel.fromJson(Map<String, dynamic> json) {
-    promoMasterOnLoad = json['promoMasterOnLoad'] != null ? PromoMasterOnLoad.fromJson(json['promoMasterOnLoad']) : null;
+    promoMasterOnLoad = json['promoMasterOnLoad'] != null
+        ? PromoMasterOnLoad.fromJson(json['promoMasterOnLoad'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -21,12 +23,13 @@ class PromoMasterOnloadModel {
 class PromoMasterOnLoad {
   List<DropDownValue>? lstLocation;
   List<DropDownValue>? lstPromoType;
-  List<DropDownValue>? lstTapeType;
+  List<DropDownValue2>? lstTapeType;
   List<DropDownValue>? lstCategory;
   List<DropDownValue>? lstOriginalRepeat;
   List<DropDownValue>? lstBilling;
   List<DropDownValue>? lstptype;
   List<DropDownValue>? lstTapeID;
+  List<DropDownValue>? company;
 
   PromoMasterOnLoad(
       {this.lstLocation,
@@ -36,7 +39,8 @@ class PromoMasterOnLoad {
       this.lstOriginalRepeat,
       this.lstBilling,
       this.lstptype,
-      this.lstTapeID});
+      this.lstTapeID,
+      this.company});
 
   PromoMasterOnLoad.fromJson(Map<String, dynamic> json) {
     if (json['lstLocation'] != null) {
@@ -58,12 +62,12 @@ class PromoMasterOnLoad {
       });
     }
     if (json['lstTapeType'] != null) {
-      lstTapeType = <DropDownValue>[];
+      lstTapeType = <DropDownValue2>[];
       json['lstTapeType'].forEach((v) {
-        lstTapeType!.add(DropDownValue(
-          key: v['code'].toString(),
-          value: v['name'].toString(),
-        ));
+        lstTapeType!.add(DropDownValue2(
+            key: v['code'].toString(),
+            value: v['name'].toString(),
+            type: v['isActive'].toString()));
       });
     }
     if (json['lstCategory'] != null) {
@@ -111,6 +115,15 @@ class PromoMasterOnLoad {
         ));
       });
     }
+    if (json['company'] != null) {
+      company = <DropDownValue>[];
+      json['company'].forEach((v) {
+        company!.add(DropDownValue(
+          key: v['companyCode'].toString(),
+          value: v['companyName'].toString(),
+        ));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -128,7 +141,8 @@ class PromoMasterOnLoad {
       data['lstCategory'] = lstCategory!.map((v) => v.toJson()).toList();
     }
     if (lstOriginalRepeat != null) {
-      data['lstOriginalRepeat'] = lstOriginalRepeat!.map((v) => v.toJson()).toList();
+      data['lstOriginalRepeat'] =
+          lstOriginalRepeat!.map((v) => v.toJson()).toList();
     }
     if (lstBilling != null) {
       data['lstBilling'] = lstBilling!.map((v) => v.toJson()).toList();
@@ -138,6 +152,9 @@ class PromoMasterOnLoad {
     }
     if (lstTapeID != null) {
       data['lstTapeID'] = lstTapeID!.map((v) => v.toJson()).toList();
+    }
+    if (lstTapeID != null) {
+      data['company'] = company!.map((v) => v.toJson()).toList();
     }
     return data;
   }

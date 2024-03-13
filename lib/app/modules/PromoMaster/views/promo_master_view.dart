@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/providers/ApiFactory.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/NumericStepButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -329,26 +330,41 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                   controller.isBillOpen = v;
                                                 },
                                               ),
-                                              DropDownField
-                                                  .formDropDown1WidthMap(
-                                                controller
-                                                        .onloadModel
-                                                        ?.promoMasterOnLoad
-                                                        ?.lstTapeType ??
-                                                    [],
-                                                (val) => controller
-                                                        .selectedDropDowns[10] =
-                                                    val,
-                                                "Tape Type",
-                                                controller.componentWidthRatio,
-                                                selected: controller
-                                                    .selectedDropDowns[10],
-                                                isMandatory: true,
-                                                inkWellFocusNode:
-                                                    controller.tapeTypFN,
-                                                dropdownOpen: (v) {
-                                                  controller.isTapTypOpen = v;
-                                                },
+                                              Obx(
+                                                () => DropDownField
+                                                    .formDropDown1WidthMap2(
+                                                  controller
+                                                          .onloadModel
+                                                          ?.promoMasterOnLoad
+                                                          ?.lstTapeType ??
+                                                      [],
+                                                  (val) {
+                                                    if (val.type == "true") {
+                                                      controller
+                                                          .selectedTapeType
+                                                          .value = val;
+                                                    } else {
+                                                      controller
+                                                          .selectedTapeType
+                                                          .value = null;
+                                                      LoadingDialog
+                                                          .callErrorMessage1(
+                                                              msg:
+                                                                  'Only HD & SD are allowed');
+                                                    }
+                                                  },
+                                                  "Tape Type",
+                                                  controller
+                                                      .componentWidthRatio,
+                                                  selected: controller
+                                                      .selectedTapeType.value,
+                                                  isMandatory: true,
+                                                  inkWellFocusNode:
+                                                      controller.tapeTypFN,
+                                                  dropdownOpen: (v) {
+                                                    controller.isTapTypOpen = v;
+                                                  },
+                                                ),
                                               ),
                                               InputFields.formFieldNumberMask(
                                                   controller: controller.somCtr,

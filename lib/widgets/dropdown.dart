@@ -3553,7 +3553,7 @@ class DropDownField {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       /* if (showtitle && !titleInLeft) ...{
+        /* if (showtitle && !titleInLeft) ...{
           Text(
             hint,
             style: TextStyle(
@@ -3750,7 +3750,7 @@ class DropDownField {
                                                           onTap: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            selected = element;
+                                                            // selected = element;
                                                             re(() {});
                                                             callback(element);
                                                             FocusScope.of(
