@@ -827,6 +827,7 @@ class NewShortContentFormController extends GetxController {
     selectedProgram.value = null;
     selectedTape.value = null;
     selectedOrgRep.value = null;
+
     caption.clear();
     txCaption.clear();
     houseId.text = "AUTOID";

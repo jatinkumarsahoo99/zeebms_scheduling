@@ -130,6 +130,7 @@ class FillerMasterController extends GetxController {
     musicDirectorCtr.clear();
     musicCompanyCtr.clear();
     fillerCode = "";
+    selectedTapeType.value = null;
     selectedDropDowns = List.generate(20, (index) => null);
     focusNodeList = List.generate(17, (index) => FocusNode());
     if (onloadModel?.fillerMasterOnload?.lsttapesource != null &&

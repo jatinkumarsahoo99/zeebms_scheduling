@@ -171,8 +171,8 @@ class FillerMasterOnload {
       company = <DropDownValue>[];
       json['company'].forEach((v) {
         company!.add(DropDownValue(
-            key: v['companyCode'].toString(),
-            value: v['companyName'].toString()));
+            key: v['bannerCode'].toString(),
+            value: v['bannerName'].toString()));
       });
     }
   }
