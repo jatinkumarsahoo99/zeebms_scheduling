@@ -344,9 +344,6 @@ class PromoMasterView extends GetView<PromoMasterController> {
                                                           .selectedTapeType
                                                           .value = val;
                                                     } else {
-                                                      controller
-                                                          .selectedTapeType
-                                                          .value = null;
                                                       LoadingDialog
                                                           .callErrorMessage1(
                                                               msg:
