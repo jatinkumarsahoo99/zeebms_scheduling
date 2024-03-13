@@ -374,7 +374,7 @@ class PromoMasterController extends GetxController {
       LoadingDialog.showErrorDialog("Please enter cart no.");
     } else if (selectedDropDowns[9] == null) {
       LoadingDialog.showErrorDialog("Please select billing.");
-    } else if (selectedDropDowns[10] == null) {
+    } else if (selectedTapeType.value == null) {
       LoadingDialog.showErrorDialog("Please select tape type.");
     } else if (tapeIDCtr.text.isEmpty) {
       LoadingDialog.showErrorDialog("Please enter Tape Id.");

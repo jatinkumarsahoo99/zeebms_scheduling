@@ -145,7 +145,6 @@ class NewShortContentFormView extends StatelessWidget {
                             controller.selectedTape.value = value;
                             controller.tapeFocusNode.requestFocus();
                           } else {
-                            controller.selectedTape.value = null;
                             LoadingDialog.callErrorMessage1(
                                 msg: 'Only HD & SD are allowed');
                           }

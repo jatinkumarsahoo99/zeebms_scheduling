@@ -202,8 +202,6 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                 controller.selectedTapeType
                                                     .value = val;
                                               } else {
-                                                controller.selectedTapeType
-                                                    .value = null;
                                                 LoadingDialog.callErrorMessage1(
                                                     msg:
                                                         'Only HD & SD are allowed');
