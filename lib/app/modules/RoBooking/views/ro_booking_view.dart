@@ -122,7 +122,7 @@ class RoBookingView extends StatelessWidget {
                                   ),
                                 ),
                                 FocusTraversalOrder(
-                                  order: NumericFocusOrder(6),
+                                  order: const NumericFocusOrder(6),
                                   child: InputFields.formField1(
                                     focusNode: controller.refrenceFocus,
                                     hintTxt: "Ref No",

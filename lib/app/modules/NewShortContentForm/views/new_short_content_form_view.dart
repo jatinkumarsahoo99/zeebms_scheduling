@@ -143,6 +143,7 @@ class NewShortContentFormView extends StatelessWidget {
                         (value) {
                           if (value.type == "true") {
                             controller.selectedTape.value = value;
+                            print(controller.selectedTape.value?.key);
                             controller.tapeFocusNode.requestFocus();
                           } else {
                             LoadingDialog.callErrorMessage1(
