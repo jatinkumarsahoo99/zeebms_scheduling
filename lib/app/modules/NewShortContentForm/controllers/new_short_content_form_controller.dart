@@ -349,14 +349,26 @@ class NewShortContentFormController extends GetxController {
                 selectedLocation.value = locations.firstWhereOrNull((element) =>
                     element.key?.toLowerCase() ==
                     (data["LocationCode"] ?? "").toLowerCase());
+                // getChannel(data["LocationCode"]).then((value) {
+                //   selectedChannel.value = channels.firstWhereOrNull((element) {
+                //     print(element.key);
+                //     print(element.key?.toLowerCase() ==
+                //         (data["ChannelCode"] ?? "").toLowerCase());
+                //     return element.key?.toLowerCase() ==
+                //         (data["ChannelCode"] ?? "").toLowerCase();
+                //   });
+                // });
                 getChannel(data["LocationCode"]).then((value) {
-                  selectedChannel.value = channels.firstWhereOrNull((element) {
-                    print(element.key);
-                    print(element.key?.toLowerCase() ==
-                        (data["ChannelCode"] ?? "").toLowerCase());
-                    return element.key?.toLowerCase() ==
-                        (data["ChannelCode"] ?? "").toLowerCase();
-                  });
+                  var tempChannel = channels.firstWhereOrNull((element) =>
+                      element.key?.toLowerCase() ==
+                      (data["ChannelCode"] ?? "").toLowerCase());
+                  if (tempChannel != null) {
+                    selectedChannel.value = tempChannel;
+                  } else {
+                    LoadingDialog.callErrorMessage1(
+                        msg:
+                            "You do not have required channel rights. Please contact support team.");
+                  }
                 });
                 typeleave(selectedCategory.value?.type).then((value) {
                   selectedTape.value = tapes.firstWhereOrNull((element) =>
@@ -400,11 +412,23 @@ class NewShortContentFormController extends GetxController {
                 selectedLocation.value = locations.firstWhereOrNull((element) =>
                     element.key?.toLowerCase() ==
                     (data["Locationcode"] ?? "").toLowerCase());
+                // getChannel(data["Locationcode"]).then((value) {
+                //   selectedChannel.value = channels.firstWhereOrNull((element) {
+                //     return element.key?.toLowerCase() ==
+                //         (data["ChannelCode"] ?? "").toLowerCase();
+                //   });
+                // });
                 getChannel(data["Locationcode"]).then((value) {
-                  selectedChannel.value = channels.firstWhereOrNull((element) {
-                    return element.key?.toLowerCase() ==
-                        (data["ChannelCode"] ?? "").toLowerCase();
-                  });
+                  var tempChannel = channels.firstWhereOrNull((element) =>
+                      element.key?.toLowerCase() ==
+                      (data["ChannelCode"] ?? "").toLowerCase());
+                  if (tempChannel != null) {
+                    selectedChannel.value = tempChannel;
+                  } else {
+                    LoadingDialog.callErrorMessage1(
+                        msg:
+                            "You do not have required channel rights. Please contact support team.");
+                  }
                 });
                 typeCode = data["VignetteCode"];
                 caption.text = data["VignetteCaption"] ?? "";
