@@ -435,7 +435,7 @@ class PromoMasterController extends GetxController {
         "promoCategoryCode": selectedDropDowns[0]?.key,
         "exportTapeCode": tapeIDCtr.text,
         "exportTapeCaption": txCaptionPreFix + txCaptionCtr.text,
-        "tapeTypeCode": selectedDropDowns[10]?.key,
+        "tapeTypeCode": selectedTapeType.value?.key,
         "channelCode": selectedDropDowns[3]?.key,
         "programCode": selectedDropDowns[6]?.key,
         "originalRepeatCode": selectedDropDowns[8]?.key,
