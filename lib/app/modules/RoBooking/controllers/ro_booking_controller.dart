@@ -103,15 +103,20 @@ class RoBookingController extends GetxController {
   DropDownValue? selectedSecEvent;
   DropDownValue? selectedTriggerAt;
   DropDownValue? selectedPdc;
+  DropDownValue? selectedLocationSpot;
+  DropDownValue? selectedChannelSpot;
 
   String? dealProgramCode;
   String? dealStartTime;
   String? dealTelecastDate;
-  var bookingsummaryDefault = RxBool(false);
+  var bookingsummaryDefault = RxBool(true);
 
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
+  var isLocationChannel = true.obs;
+  var isAllEnable = true.obs;
+  var isAgencyLeave = true.obs;
 
   int? bookingNoLeaveDealCurrentRow;
   String? bookingNoLeaveDealCurrentColumn;
@@ -182,6 +187,20 @@ class RoBookingController extends GetxController {
           if (data is Map && data.containsKey("info_RoBookingLoad")) {
             roBookingInitData =
                 RoBookingInitData.fromJson(data["info_RoBookingLoad"]);
+            selectedLocationSpot = DropDownValue(
+                value: roBookingInitData!.lstVerifiedLoationChannel!
+                    .lVerifiedLocations![0].locationname
+                    .toString(),
+                key: roBookingInitData!.lstVerifiedLoationChannel!
+                    .lVerifiedLocations![0].locationcode
+                    .toString());
+            selectedChannelSpot = DropDownValue(
+                value: roBookingInitData!
+                    .lstVerifiedLoationChannel!.lVerifiedChannel![0].channelName
+                    .toString(),
+                key: roBookingInitData!
+                    .lstVerifiedLoationChannel!.lVerifiedChannel![0].channelCode
+                    .toString());
             update(["init"]);
           }
         });
@@ -236,6 +255,7 @@ class RoBookingController extends GetxController {
           fun: (dataMap) {
             if (dataMap is Map &&
                 dataMap.containsKey("info_GetEffectiveDateLeave")) {
+              isLocationChannel.value = false;
               Map data = dataMap["info_GetEffectiveDateLeave"];
               if (data.containsKey("lstClientAgency") &&
                   data["lstClientAgency"] is List) {
@@ -400,7 +420,11 @@ class RoBookingController extends GetxController {
             //   key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
             //   value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
             // );
-
+            if (agencyLeaveData!.zoneCode != null &&
+                agencyLeaveData!.payroute != null) {
+              isAgencyLeave.value = false;
+              print("value===> ${isAllEnable.value}");
+            }
             zoneCtrl.text = agencyLeaveData?.zoneName ?? "";
             payrouteCtrl.text = agencyLeaveData?.payroute ?? "";
             bookingNoCtrl.text = agencyLeaveData?.bookingNumber ?? "";
@@ -1101,6 +1125,11 @@ class RoBookingController extends GetxController {
                   selectedChannel?.value == e.channelname.toString();
               return result;
             }).toList();
+            if (bookingNoLeaveData!.lstClientAgency != null &&
+                bookingNoLeaveData!.lstDealNumber != null) {
+              isAllEnable.value = false;
+              print("value===> ${isAllEnable.value}");
+            }
             if (bookingNoLeaveData == null) {
               LoadingDialog.showErrorDialog("info_LeaveBookingNumber was null");
               return;
