@@ -5,11 +5,13 @@ import 'package:bms_scheduling/app/providers/ColorData.dart';
 import 'package:bms_scheduling/widgets/DataGridShowOnly.dart';
 import 'package:bms_scheduling/widgets/DateTime/DateWithThreeTextField.dart';
 import 'package:bms_scheduling/widgets/FormButton.dart';
+import 'package:bms_scheduling/widgets/PlutoGrid/src/manager/pluto_grid_state_manager.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import '../../../../widgets/PlutoGrid/src/pluto_grid.dart';
 import '../../../controller/MainController.dart';
 import '../../../data/PermissionModel.dart';
 import '../../../data/user_data_settings_model.dart';
@@ -107,7 +109,10 @@ class AuditStatusView extends GetView<AuditStatusController> {
                           },
                           onload: (sm) {
                             controller.stateManager = sm.stateManager;
+                            sm.stateManager
+                                .setSelectingMode(PlutoGridSelectingMode.row);
                           },
+                          mode: PlutoGridMode.normal,
                           onRowDoubleTap: (event) {
                             if (controller.currentType.value == "Cancelation") {
                               controller.showECancel(event.row.sortIdx);

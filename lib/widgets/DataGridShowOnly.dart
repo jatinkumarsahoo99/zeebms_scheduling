@@ -100,7 +100,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             enableAutoEditing: false,
             enableColumnDrag: false,
             field: "no",
-            minWidth: 5,
+            minWidth: 25,
             cellPadding: const EdgeInsets.all(0),
             width:
                 (keysWidths != null && keysWidths!.keys.toList().contains('no'))
@@ -294,7 +294,8 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                       DataGridMenu().showGridMenu(
                           rendererContext.stateManager, detail, context,
                           data: mapData,
-                          exportFileName: exportFileName, extraList: extraList);
+                          exportFileName: exportFileName,
+                          extraList: extraList);
                     },
                     child: Text(
                       (checkRow == true &&

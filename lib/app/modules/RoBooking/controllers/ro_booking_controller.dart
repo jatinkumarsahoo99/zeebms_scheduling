@@ -190,33 +190,16 @@ class RoBookingController extends GetxController {
         onBookingNoLeave();
       }
     });
-    // refrenceFocus.addListener(() {
-    //   if (!refrenceFocus.hasFocus && refNoCtrl.text.isEmpty) {
-    //     LoadingDialog.callErrorMessage1(
-    //         msg: "Reference No cannot be left blank.",
-    //         barrierDismissible: false,
-    //         callback: () {
-    //           refrenceFocus.requestFocus();
-    //         });
-    //   }
-    // });
-    refrenceFocus = FocusNode(
-      onKeyEvent: (node, event) {
-        if (event.logicalKey == LogicalKeyboardKey.tab &&
-            event is KeyDownEvent) {
-          if (!refrenceFocus.hasFocus && refNoCtrl.text.isEmpty) {
-            LoadingDialog.callErrorMessage1(
-                msg: "Reference No cannot be left blank.",
-                barrierDismissible: false,
-                callback: () {
-                  refrenceFocus.requestFocus();
-                });
-          }
-          return KeyEventResult.ignored;
-        }
-        return KeyEventResult.ignored;
-      },
-    );
+    refrenceFocus.addListener(() {
+      if (!refrenceFocus.hasFocus && refNoCtrl.text.isEmpty) {
+        LoadingDialog.callErrorMessage1(
+            msg: "Reference No cannot be left blank.",
+            barrierDismissible: false,
+            callback: () {
+              refrenceFocus.requestFocus();
+            });
+      }
+    });
     tapeIdFocus.addListener(() async {
       if (!tapeIdFocus.hasFocus) {
         getTapeID(tapeIDCtrl.text);
