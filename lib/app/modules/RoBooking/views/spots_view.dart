@@ -353,13 +353,16 @@ class SpotsView extends GetView<RoBookingController> {
                                             hintTxt: "Cheque No",
                                             width: 0.083,
                                             controller: chequeNoCtrl),
-                                        DateWithThreeTextField(
-                                          title: "Chq Dt",
-                                          widthRation: 0.084,
-                                          mainTextController: chqDateCtrl,
-                                          isEnable:
-                                              controller.bookingNoLeaveData ==
-                                                  null,
+                                        Obx(
+                                          () => DateWithThreeTextField(
+                                              title: "Chq Dt",
+                                              widthRation: 0.084,
+                                              mainTextController: chqDateCtrl,
+                                              isEnable:
+                                                  controller.isAllEnable.value
+                                              // controller.bookingNoLeaveData ==
+                                              //     null,
+                                              ),
                                         ),
                                         InputFields.numbers(
                                             hintTxt: "Chq Amt",
@@ -373,13 +376,16 @@ class SpotsView extends GetView<RoBookingController> {
                                             hintTxt: "Chq Recd By",
                                             width: 0.27,
                                             controller: chequeRecByCtrl),
-                                        DateWithThreeTextField(
-                                          title: "Recd On",
-                                          widthRation: 0.27,
-                                          mainTextController: chequeRecOnCtrl,
-                                          isEnable:
-                                              controller.bookingNoLeaveData ==
-                                                  null,
+                                        Obx(
+                                          () => DateWithThreeTextField(
+                                            title: "Recd On",
+                                            widthRation: 0.27,
+                                            mainTextController: chequeRecOnCtrl,
+                                            isEnable:
+                                                controller.isAllEnable.value,
+                                            // controller.bookingNoLeaveData ==
+                                            //     null,
+                                          ),
                                         ),
                                         InputFields.formField1(
                                             hintTxt: "Remarks",
