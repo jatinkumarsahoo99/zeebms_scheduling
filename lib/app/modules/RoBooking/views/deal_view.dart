@@ -39,148 +39,155 @@ class DealView extends GetView<RoBookingController> {
                         mainTextController: controller.dealToCtrl),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
-                Expanded(
-                  child: Container(
-                      child:
-                          gridcontroller.bookingNoLeaveData != null &&
-                                  gridcontroller.bookingNoLeaveData!
-                                          .lstdgvDealDetails !=
-                                      null &&
-                                  gridcontroller.bookingNoLeaveData!
-                                      .lstdgvDealDetails!.isNotEmpty
-                              ? DataGridShowOnlyKeys(
-                                  mapData: gridcontroller
-                                      .bookingNoLeaveData!.lstdgvDealDetails!
-                                      .map((e) => e.toJson())
-                                      .toList(),
-                                  keysWidths: (controller
-                                      .userDataSettings?.userSetting
-                                      ?.firstWhere(
-                                          (element) =>
-                                              element.controlName ==
-                                              "dealViewGrid",
-                                          orElse: () => UserSetting())
-                                      .userSettings),
-                                  onload: (load) {
-                                    gridcontroller.dealViewGrid =
-                                        load.stateManager;
-                                    if (gridcontroller
-                                            .bookingNoLeaveDealCurrentRow !=
-                                        null) {
-                                      load.stateManager.setCurrentCell(
-                                          load
-                                              .stateManager
-                                              .rows[gridcontroller
-                                                      .bookingNoLeaveDealCurrentRow ??
-                                                  0]
-                                              .cells["programName"],
-                                          gridcontroller
-                                              .bookingNoLeaveDealCurrentRow);
-                                      load.stateManager.moveScrollByRow(
-                                          PlutoMoveDirection.down,
-                                          gridcontroller
-                                              .bookingNoLeaveDealCurrentRow);
-                                    }
-                                  },
-                                  hideCode: false,
-                                  onRowDoubleTap: (value) {
-                                    controller.dealViewGrid?.setCurrentCell(
-                                        value.cell, value.rowIdx);
-                                    gridcontroller
-                                            .bookingNoLeaveDealCurrentColumn =
-                                        value.cell.column.field;
-                                    gridcontroller
-                                            .bookingNoLeaveDealCurrentRow =
-                                        value.rowIdx;
-
-                                    gridcontroller.dealdoubleclick(
-                                        gridcontroller.dealViewGrid!.columns
-                                            .indexWhere((element) =>
-                                                element.field ==
-                                                value.cell.column.field),
-                                        value.rowIdx);
-                                  },
-                                )
-                              : (gridcontroller.dealNoLeaveData != null &&
-                                      gridcontroller.dealNoLeaveData!
-                                              .lstdgvDealDetails !=
-                                          null &&
-                                      gridcontroller.dealNoLeaveData!
-                                          .lstdgvDealDetails!.isNotEmpty
-                                  ? DataGridShowOnlyKeys(
-                                      colorCallback: (event) {
-                                        if (event.row ==
-                                            gridcontroller
-                                                .dealViewGrid?.currentRow) {
-                                          return Colors.deepPurple.shade100;
-                                        } else {
-                                          return Colors.white;
-                                        }
-                                      },
-                                      mapData: gridcontroller
-                                          .dealNoLeaveData!.lstdgvDealDetails!
-                                          .map((e) => e.toJson())
-                                          .toList(),
-                                      keysWidths: (controller
-                                          .userDataSettings?.userSetting
-                                          ?.firstWhere(
-                                              (element) =>
-                                                  element.controlName ==
-                                                  "dealViewGrid",
-                                              orElse: () => UserSetting())
-                                          .userSettings),
-                                      onload: (load) {
-                                        gridcontroller.dealViewGrid =
-                                            load.stateManager;
-                                        gridcontroller.dealViewGrid?.setFilter(
+                GetBuilder<RoBookingController>(
+                    id: "dealUpdate",
+                    init: Get.find<RoBookingController>(),
+                    builder: (context) {
+                      return Expanded(
+                        child: Container(
+                            child: gridcontroller.bookingNoLeaveData != null &&
+                                    gridcontroller.bookingNoLeaveData!
+                                            .lstdgvDealDetails !=
+                                        null &&
+                                    gridcontroller.bookingNoLeaveData!
+                                        .lstdgvDealDetails!.isNotEmpty
+                                ? DataGridShowOnlyKeys(
+                                    mapData: gridcontroller
+                                        .bookingNoLeaveData!.lstdgvDealDetails!
+                                        .map((e) => e.toJson())
+                                        .toList(),
+                                    keysWidths: (controller
+                                        .userDataSettings?.userSetting
+                                        ?.firstWhere(
                                             (element) =>
-                                                controller
-                                                    .selectedDeal?.value ==
-                                                element.cells['dealNumber']
-                                                    ?.value);
-                                        if (gridcontroller
-                                                .dealNoLeaveCurrentRow !=
-                                            null) {
-                                          load.stateManager.setCurrentCell(
-                                              load
-                                                      .stateManager
-                                                      .rows[gridcontroller
-                                                              .dealNoLeaveCurrentRow ??
-                                                          0]
-                                                      .cells[
-                                                  gridcontroller
-                                                      .dealNoLeaveDealCurrentColumn],
+                                                element.controlName ==
+                                                "dealViewGrid",
+                                            orElse: () => UserSetting())
+                                        .userSettings),
+                                    onload: (load) {
+                                      gridcontroller.dealViewGrid =
+                                          load.stateManager;
+                                      if (gridcontroller
+                                              .bookingNoLeaveDealCurrentRow !=
+                                          null) {
+                                        load.stateManager.setCurrentCell(
+                                            load
+                                                .stateManager
+                                                .rows[gridcontroller
+                                                        .bookingNoLeaveDealCurrentRow ??
+                                                    0]
+                                                .cells["programName"],
+                                            gridcontroller
+                                                .bookingNoLeaveDealCurrentRow);
+                                        load.stateManager.moveScrollByRow(
+                                            PlutoMoveDirection.down,
+                                            gridcontroller
+                                                .bookingNoLeaveDealCurrentRow);
+                                      }
+                                    },
+                                    hideCode: false,
+                                    onRowDoubleTap: (value) {
+                                      controller.dealViewGrid?.setCurrentCell(
+                                          value.cell, value.rowIdx);
+                                      gridcontroller
+                                              .bookingNoLeaveDealCurrentColumn =
+                                          value.cell.column.field;
+                                      gridcontroller
+                                              .bookingNoLeaveDealCurrentRow =
+                                          value.rowIdx;
+
+                                      gridcontroller.dealdoubleclick(
+                                          gridcontroller.dealViewGrid!.columns
+                                              .indexWhere((element) =>
+                                                  element.field ==
+                                                  value.cell.column.field),
+                                          value.rowIdx);
+                                    },
+                                  )
+                                : (gridcontroller.dealNoLeaveData != null &&
+                                        gridcontroller.dealNoLeaveData!
+                                                .lstdgvDealDetails !=
+                                            null &&
+                                        gridcontroller.dealNoLeaveData!
+                                            .lstdgvDealDetails!.isNotEmpty
+                                    ? DataGridShowOnlyKeys(
+                                        colorCallback: (event) {
+                                          if (event.row ==
                                               gridcontroller
-                                                  .dealNoLeaveCurrentRow);
-                                        }
-                                      },
-                                      onRowDoubleTap: (value) {
-                                        controller.dealViewGrid?.setCurrentCell(
-                                            value.cell, value.rowIdx);
-                                        gridcontroller
-                                                .dealNoLeaveDealCurrentColumn =
-                                            value.cell.column.field;
-                                        gridcontroller.dealNoLeaveCurrentRow =
-                                            value.rowIdx;
-                                        gridcontroller.dealdoubleclick(
-                                            gridcontroller.dealViewGrid!.columns
-                                                .indexWhere((element) =>
-                                                    element.field ==
-                                                    value.cell.column.field),
-                                            value.rowIdx);
-                                      },
-                                      hideCode: false,
-                                      // mode: PlutoGridMode.selectWithOneTap,
-                                    )
-                                  : Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1.0, color: Colors.grey)),
-                                    ))),
-                )
+                                                  .dealViewGrid?.currentRow) {
+                                            return Colors.deepPurple.shade100;
+                                          } else {
+                                            return Colors.white;
+                                          }
+                                        },
+                                        mapData: gridcontroller
+                                            .dealNoLeaveData!.lstdgvDealDetails!
+                                            .map((e) => e.toJson())
+                                            .toList(),
+                                        keysWidths: (controller
+                                            .userDataSettings?.userSetting
+                                            ?.firstWhere(
+                                                (element) =>
+                                                    element.controlName ==
+                                                    "dealViewGrid",
+                                                orElse: () => UserSetting())
+                                            .userSettings),
+                                        onload: (load) {
+                                          gridcontroller.dealViewGrid =
+                                              load.stateManager;
+                                          gridcontroller.dealViewGrid
+                                              ?.setFilter((element) =>
+                                                  controller
+                                                      .selectedDeal?.value ==
+                                                  element.cells['dealNumber']
+                                                      ?.value);
+                                          if (gridcontroller
+                                                  .dealNoLeaveCurrentRow !=
+                                              null) {
+                                            load.stateManager.setCurrentCell(
+                                                load
+                                                        .stateManager
+                                                        .rows[gridcontroller
+                                                                .dealNoLeaveCurrentRow ??
+                                                            0]
+                                                        .cells[
+                                                    gridcontroller
+                                                        .dealNoLeaveDealCurrentColumn],
+                                                gridcontroller
+                                                    .dealNoLeaveCurrentRow);
+                                          }
+                                        },
+                                        onRowDoubleTap: (value) {
+                                          controller.dealViewGrid
+                                              ?.setCurrentCell(
+                                                  value.cell, value.rowIdx);
+                                          gridcontroller
+                                                  .dealNoLeaveDealCurrentColumn =
+                                              value.cell.column.field;
+                                          gridcontroller.dealNoLeaveCurrentRow =
+                                              value.rowIdx;
+                                          gridcontroller.dealdoubleclick(
+                                              gridcontroller
+                                                  .dealViewGrid!.columns
+                                                  .indexWhere((element) =>
+                                                      element.field ==
+                                                      value.cell.column.field),
+                                              value.rowIdx);
+                                        },
+                                        hideCode: false,
+                                        // mode: PlutoGridMode.selectWithOneTap,
+                                      )
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 1.0,
+                                                color: Colors.grey)),
+                                      ))),
+                      );
+                    })
               ],
             ));
   }
