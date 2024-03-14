@@ -19,8 +19,10 @@ class Const {
   static const appVersion = '1.0.4';
   static const exportRowsInLocal = 2000;
 
-  static const List<String> firstColumnBlankFormNames = ["frmsearchingKKBMS_View_DroppedSpots"];
-
+  static const List<String> firstColumnBlankFormNames = [
+    "frmsearchingKKBMS_View_DroppedSpots",
+    "frmSearchingKKBMS_view_BookingDetail"
+  ];
 
   static List<SystemEnviroment> systemEnviroments = [
     SystemEnviroment(value: "Data Migration", url: ""),
@@ -48,15 +50,12 @@ class Const {
     504: "504 - The request is timed out. Please try again later"
   };
 
-
   static const double SIXTY_MIN = 0.9;
   static double THIRTY_MIN = 1;
   static double FIFTEEN_MIN = 2;
   static double TEN_MIN = 3;
   static double FIVE_MIN = 5;
   static double ONE_MIN = 7;
-
-
 
 /*
   static String getInstrumentKey() {
@@ -202,8 +201,11 @@ class Const {
   }*/
 
   static String getInstrumentKey() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.appInsrtumentationKey??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>()
+              .environmentModel
+              ?.appInsrtumentationKey ??
+          "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -217,10 +219,9 @@ class Const {
     }
   }
 
-
   static String getBaseLoginAPIUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.apiLoginUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.apiLoginUrl ?? "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -235,8 +236,8 @@ class Const {
   }
 
   static String getBaseCommonAPIUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.apiCommonUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.apiCommonUrl ?? "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -251,8 +252,9 @@ class Const {
   }
 
   static String getBaseProgrammingAPIUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.apiProgrammingUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.apiProgrammingUrl ??
+          "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -267,8 +269,8 @@ class Const {
   }
 
   static String getBaseAdminAPIUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.apiAdminUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.apiAdminUrl ?? "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -283,8 +285,9 @@ class Const {
   }
 
   static String getBaseSchedulingAPIUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.apiSchedulingUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.apiSchedulingUrl ??
+          "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -299,8 +302,8 @@ class Const {
   }
 
   static String getWebLoginUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.appLoginUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.appLoginUrl ?? "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -315,8 +318,8 @@ class Const {
   }
 
   static String getWebCommonUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.appCommonUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.appCommonUrl ?? "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -331,8 +334,9 @@ class Const {
   }
 
   static String getWebProgrammingUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.appProgrammingUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.appProgrammingUrl ??
+          "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -347,8 +351,8 @@ class Const {
   }
 
   static String getWebAdminUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.appAdminUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.appAdminUrl ?? "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":
@@ -361,9 +365,11 @@ class Const {
         return "https://app-admin-bms-dev.zeeconnect.in";
     }
   }
+
   static String getWebSchedulingUrl() {
-    if(!kDebugMode){
-      return Get.find<MainController>().environmentModel?.appSchedulingUrl??"";
+    if (!kDebugMode) {
+      return Get.find<MainController>().environmentModel?.appSchedulingUrl ??
+          "";
     }
     switch (ApiFactory.Enviroment.toLowerCase()) {
       case "prod":

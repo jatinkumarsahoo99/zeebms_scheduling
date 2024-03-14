@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
@@ -117,6 +118,7 @@ class RoBookingController extends GetxController {
   var isLocationChannel = true.obs;
   var isAllEnable = true.obs;
   var isAgencyLeave = true.obs;
+  var isAgainCall = false;
 
   int? bookingNoLeaveDealCurrentRow;
   String? bookingNoLeaveDealCurrentColumn;
@@ -204,11 +206,25 @@ class RoBookingController extends GetxController {
             update(["init"]);
           }
         });
-    bookingNoFocus.addListener(() {
-      if (!bookingNoFocusNode.hasFocus && bookingNoCtrl.text.isNotEmpty) {
-        onBookingNoLeave();
-      }
-    });
+    // bookingNoFocus.addListener(() {
+    //   if (!bookingNoFocusNode.hasFocus && bookingNoCtrl.text.isNotEmpty) {
+    //     onBookingNoLeave();
+    //   }
+    // });
+    bookingNoFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (bookingNoCtrl.text.isNotEmpty) {
+            onBookingNoLeave();
+            Timer(const Duration(milliseconds: 100), () {
+              onBookingNoLeave();
+            });
+            return KeyEventResult.ignored;
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+    );
     refrenceFocus.addListener(() {
       if (!refrenceFocus.hasFocus && refNoCtrl.text.isEmpty) {
         LoadingDialog.callErrorMessage1(
@@ -255,7 +271,6 @@ class RoBookingController extends GetxController {
           fun: (dataMap) {
             if (dataMap is Map &&
                 dataMap.containsKey("info_GetEffectiveDateLeave")) {
-              isLocationChannel.value = false;
               Map data = dataMap["info_GetEffectiveDateLeave"];
               if (data.containsKey("lstClientAgency") &&
                   data["lstClientAgency"] is List) {
@@ -1120,11 +1135,14 @@ class RoBookingController extends GetxController {
                 value["info_LeaveBookingNumber"]);
             bookingNoLeaveData?.lstdgvDealDetails =
                 bookingNoLeaveData?.lstdgvDealDetails?.where((e) {
+              print(e.recordnumber);
               var result = selectedDeal?.value == e.dealNumber.toString() &&
                   selectedLocation?.value == e.locationname.toString() &&
                   selectedChannel?.value == e.channelname.toString();
               return result;
             }).toList();
+            print(bookingNoLeaveData!.lstdgvDealDetails!.length);
+            update(["dealUpdate"]);
             if (bookingNoLeaveData!.lstClientAgency != null &&
                 bookingNoLeaveData!.lstDealNumber != null) {
               isAllEnable.value = false;
@@ -1147,6 +1165,14 @@ class RoBookingController extends GetxController {
             selectedDeal = DropDownValue(
                 key: bookingNoLeaveData?.lstDealNumber?.first.dealNumber,
                 value: bookingNoLeaveData?.lstDealNumber?.first.dealNumber);
+            fpcEffectiveDateCtrl.text = (DateFormat("dd-MM-yyyy").format(
+                    DateFormat("MM/dd/yyyy HH:mm:ss")
+                        .parse(bookingNoLeaveData!.bookingEffectiveDate!)))
+                .toString();
+            bookDateCtrl.text = (DateFormat("dd-MM-yyyy").format(
+                    DateFormat("MM/dd/yyyy HH:mm:ss")
+                        .parse(bookingNoLeaveData!.bookingDate!)))
+                .toString();
             try {
               // selectedExecutive = DropDownValue(
               //     key: bookingNoLeaveData!.executiveCode,
@@ -1159,11 +1185,12 @@ class RoBookingController extends GetxController {
               try {
                 selectedExecutive = DropDownValue(
                   key: bookingNoLeaveData!.executiveCode,
-                  value: bookingNoLeaveData?.lstExcutiveDetails
-                      ?.firstWhere((element) =>
-                          element.personnelCode ==
-                          bookingNoLeaveData!.executiveCode)
-                      .personnelname,
+                  value: bookingNoLeaveData!.executiveName,
+                  // bookingNoLeaveData?.lstExcutiveDetails
+                  //     ?.firstWhere((element) =>
+                  //         element.personnelCode ==
+                  //         bookingNoLeaveData!.executiveCode)
+                  //     .personnelname,
                 );
               } catch (e) {
                 print(e.toString());
@@ -1171,7 +1198,7 @@ class RoBookingController extends GetxController {
             } catch (e) {
               print(e.toString());
             }
-            print('${selectedExecutive?.key}:${selectedExecutive?.value}');
+            // print('${selectedExecutive?.key}:${selectedExecutive?.value}');
             update(["init"]);
 
             refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";

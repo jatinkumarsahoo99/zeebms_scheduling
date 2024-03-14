@@ -112,6 +112,8 @@ class RoBookingView extends StatelessWidget {
                                       mainTextController:
                                           controller.fpcEffectiveDateCtrl,
                                       onFocusChange: (date) {
+                                        controller.isLocationChannel.value =
+                                            false;
                                         controller.effDtLeave();
                                       },
                                     ),
@@ -201,13 +203,18 @@ class RoBookingView extends StatelessWidget {
                                       ),
                                       FocusTraversalOrder(
                                         order: NumericFocusOrder(5),
-                                        child: InputFields.formField1(
+                                        child: Obx(
+                                          () => InputFields.formField1(
                                             hintTxt: "",
                                             controller:
                                                 controller.bookingNoCtrl,
                                             focusNode:
                                                 controller.bookingNoFocus,
-                                            width: 0.06),
+                                            width: 0.06,
+                                            isEnable:
+                                                controller.isAllEnable.value,
+                                          ),
+                                        ),
                                       ),
                                       InputFields.formField1(
                                         hintTxt: "",

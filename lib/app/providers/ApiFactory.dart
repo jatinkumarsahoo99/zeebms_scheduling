@@ -91,7 +91,7 @@ class ApiFactory {
   }) {
     // return BASE_URL + "/api/$screenName/TextSearch?name=$name&valuecolumnname=$valuecolumnname&TableName=$TableName&chkLikeNotLike=$chkLikeNotLike&searchvalue=$searchvalue";
     return BASE_URL_COMMON +
-        "/api/CommonSearch/TextSearch?name=$name&valuecolumnname=$valuecolumnname&TableName=$TableName&chkLikeNotLike=$chkLikeNotLike&searchvalue=$searchvalue";
+        "/api/CommonSearch/TextSearch?name=$name&valuecolumnname=$valuecolumnname&TableName=$TableName&chkLikeNotLike=$chkLikeNotLike&searchvalue=${Uri.encodeComponent(searchvalue)}";
   }
 
   static String SEARCH_EXECUTE_SEARCH({
@@ -174,7 +174,8 @@ class ApiFactory {
 */
 ///////////////////////XML Download API////////////////////////
   static String EXPORT_TO_XML = "$BASE_URL_COMMON/api/Common/ConvertTableToXml";
-  static String EXPORT_TO_EXCEL = "$BASE_URL_COMMON/api/Common/ConvertJsonToExcel";
+  static String EXPORT_TO_EXCEL =
+      "$BASE_URL_COMMON/api/Common/ConvertJsonToExcel";
   static String CONVERT_TO_PDF =
       "$BASE_URL_COMMON/api/Common/ConvertTableToPDF";
   static String OPERATIONAL_FPC_PROGRAM_SEARCH =
@@ -538,9 +539,9 @@ class ApiFactory {
           String locId, String chnlId, String txtDt, String fileName) =>
       "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName";
 
-static String TRANSMISSION_LOG_MULTICHOICE1(
-          String locId, String chnlId, String txtDt, String fileName, String type) =>
-      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName&Rdbtxlog=${type=="Tx Log"?"true":"false"}&Rdbfpc=${type=="FPC"?"true":"false"}&Rdbfpcadtlbreakwise=${type=="FPC - Adtl Break"?"true":"false"}";
+  static String TRANSMISSION_LOG_MULTICHOICE1(String locId, String chnlId,
+          String txtDt, String fileName, String type) =>
+      "$BASE_URL/api/Transmissionlog/GetExportMultichoice?locationcode=$locId&channelcode=$chnlId&txtDate=$txtDt&filename=$fileName&Rdbtxlog=${type == "Tx Log" ? "true" : "false"}&Rdbfpc=${type == "FPC" ? "true" : "false"}&Rdbfpcadtlbreakwise=${type == "FPC - Adtl Break" ? "true" : "false"}";
 
   static String TRANSMISSION_LOG_SEARCH_INSERT(
           String locId,
