@@ -100,7 +100,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
             enableAutoEditing: false,
             enableColumnDrag: false,
             field: "no",
-            minWidth: 5,
+            minWidth: 25,
             cellPadding: const EdgeInsets.all(0),
             width:
                 (keysWidths != null && keysWidths!.keys.toList().contains('no'))
@@ -216,7 +216,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                 enableEditingMode: editKeys != null && editKeys!.contains(key),
                 enableDropToResize: true,
                 enableContextMenu: false,
-                minWidth: 5,
+                minWidth: 25,
                 width: (keysWidths != null && keysWidths!.containsKey(key))
                     ? keysWidths![key]!
                     : Utils.getColumnSize(
@@ -294,7 +294,8 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                       DataGridMenu().showGridMenu(
                           rendererContext.stateManager, detail, context,
                           data: mapData,
-                          exportFileName: exportFileName, extraList: extraList);
+                          exportFileName: exportFileName,
+                          extraList: extraList);
                     },
                     child: Text(
                       (checkRow == true &&
@@ -320,7 +321,7 @@ class DataGridShowOnlyKeys extends StatelessWidget {
                   ? keysWidths![key]!
                   : Utils.getColumnSize(key: key, value: mapData[0][key]),
               enableAutoEditing: false,
-              minWidth: 5,
+              minWidth: 25,
               hide: showonly == null
                   ? (hideKeys != null && hideKeys!.contains(key)) ||
                       hideCode! &&

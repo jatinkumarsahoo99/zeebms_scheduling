@@ -22,6 +22,7 @@ class RoBookingBkgNOLeaveData {
   String? brandcode;
   List<LstBrand>? lstBrand;
   String? executiveCode;
+  String? executiveName;
   String? maxSpend;
   String? dealFromDate;
   String? dealtoDate;
@@ -82,6 +83,7 @@ class RoBookingBkgNOLeaveData {
       this.brandcode,
       this.lstBrand,
       this.executiveCode,
+      this.executiveName,
       this.maxSpend,
       this.dealFromDate,
       this.dealtoDate,
@@ -161,6 +163,7 @@ class RoBookingBkgNOLeaveData {
       });
     }
     executiveCode = json['executiveCode'];
+    executiveName = json['executiveName'];
 
     maxSpend = json['maxSpend'];
     dealFromDate = json['dealFromDate'];
@@ -264,6 +267,8 @@ class RoBookingBkgNOLeaveData {
       data['lstBrand'] = lstBrand!.map((v) => v.toJson()).toList();
     }
     data['executiveCode'] = executiveCode;
+    data['executiveName'] = executiveName;
+
     data['maxSpend'] = maxSpend;
     data['dealFromDate'] = dealFromDate;
     data['dealtoDate'] = dealtoDate;

@@ -15,8 +15,6 @@ import 'dummydata.dart';
 class SpotNotVerifiedView extends GetView<RoBookingController> {
   SpotNotVerifiedView({Key? key}) : super(key: key);
   //Spot Not Verify is View Only Thats why variable define here instead of controller to aviod confusion with main location, channel and date
-  DropDownValue? selectedLocation;
-  DropDownValue? selectedChannel;
   TextEditingController effectdateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -30,20 +28,33 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   DropDownField.formDropDown1WidthMap(
-                      controller.roBookingInitData!.lstLocation!
-                          .map((e) => DropDownValue(
-                              key: e.locationCode, value: e.locationName))
-                          .toList(),
-                      (value) => {selectedLocation = value},
-                      "Location",
-                      0.24,
-                      dialogHeight: Get.height / 3),
+                    controller.roBookingInitData!.lstVerifiedLoationChannel!
+                        .lVerifiedLocations!
+                        .map((e) => DropDownValue(
+                            key: e.locationcode, value: e.locationname))
+                        .toList(),
+                    (value) => {
+                      controller.selectedLocationSpot = value,
+                    },
+                    "Location",
+                    0.24,
+                    dialogHeight: Get.height / 3,
+                    selected: controller.selectedLocationSpot,
+                  ),
                   DropDownField.formDropDown1WidthMap(
-                      controller.channels.value,
-                      dialogHeight: Get.height / 3,
-                      (value) => {selectedChannel = value},
-                      "Channel",
-                      0.24),
+                    controller.roBookingInitData!.lstVerifiedLoationChannel!
+                        .lVerifiedChannel!
+                        .map((e) => DropDownValue(
+                            key: e.channelCode, value: e.channelName))
+                        .toList(),
+                    dialogHeight: Get.height / 3,
+                    (value) => {
+                      controller.selectedChannelSpot = value,
+                    },
+                    "Channel",
+                    0.24,
+                    selected: controller.selectedChannelSpot,
+                  ),
                   DateWithThreeTextField(
                       title: "FPC Eff. Dt.",
                       widthRation: 0.12,
@@ -53,8 +64,8 @@ class SpotNotVerifiedView extends GetView<RoBookingController> {
                     iconDataM: Icons.cancel_presentation_outlined,
                     callback: () {
                       controller.getSpotNotVerified(
-                          selectedLocation?.key ?? "",
-                          selectedChannel?.key ?? "",
+                          controller.selectedLocationSpot?.key ?? "",
+                          controller.selectedChannelSpot?.key ?? "",
                           effectdateController.text.split("-")[2] +
                               effectdateController.text.split("-")[1],
                           Get.find<MainController>().user?.logincode ?? "");

@@ -150,7 +150,11 @@ class PlutoGridCellGestureEvent extends PlutoGridEvent {
         ),
       );
     } else if (stateManager.keyPressed.ctrl) {
-      stateManager.toggleSelectingRow(rowIdx);
+      print("Rows selected: "+{stateManager.currentSelectingRows.length??0}.toString());
+      if (stateManager.currentSelectingRows.length == 0){
+        stateManager.toggleSelectingRow(stateManager.currentRowIdx);
+      }
+        stateManager.toggleSelectingRow(rowIdx);
     } else {
       callOnSelected = false;
     }

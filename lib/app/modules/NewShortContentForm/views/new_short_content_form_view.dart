@@ -1,5 +1,6 @@
 import 'package:bms_scheduling/app/controller/HomeController.dart';
 import 'package:bms_scheduling/app/modules/CommonSearch/views/common_search_view.dart';
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:bms_scheduling/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -98,12 +99,12 @@ class NewShortContentFormView extends StatelessWidget {
                             controller.categoryFocusNode.requestFocus();
                             controller.typeleave(value.type);
                             // selectedId(value.value);
-                            print(
-                                "Key: ${controller.selectedCategory.value!.key}");
-                            print(
-                                "type: ${controller.selectedCategory.value!.type}");
-                            print(
-                                "value: ${controller.selectedCategory.value!.value}");
+                            // print(
+                            //     "Key: ${controller.selectedCategory.value!.key}");
+                            // print(
+                            //     "type: ${controller.selectedCategory.value!.type}");
+                            // print(
+                            //     "value: ${controller.selectedCategory.value!.value}");
                             if (value.type == "SLIDE MASTER") {
                               controller.formId.value = "L/";
                             } else if (value.type == "STILL MASTER") {
@@ -137,11 +138,17 @@ class NewShortContentFormView extends StatelessWidget {
                       ),
                     ),
                     Obx(
-                      () => DropDownField.formDropDown1WidthMap(
+                      () => DropDownField.formDropDown1WidthMap2(
                         controller.tapes.value,
                         (value) {
-                          controller.selectedTape.value = value;
-                          controller.tapeFocusNode.requestFocus();
+                          if (value.type == "true") {
+                            controller.selectedTape.value = value;
+                            print(controller.selectedTape.value?.key);
+                            controller.tapeFocusNode.requestFocus();
+                          } else {
+                            LoadingDialog.callErrorMessage1(
+                                msg: 'Only HD & SD are allowed');
+                          }
                         },
                         "Tape",
                         0.16,
@@ -234,16 +241,17 @@ class NewShortContentFormView extends StatelessWidget {
                         // isTime: true
                         ),
                     InputFields.formFieldNumberMask(
-                        hintTxt: "EOM",
-                        widthRatio: 0.16,
-                        controller: controller.eom,
-                        textFieldFN: controller.eomFN,
-                        // isTime: true,
-                        paddingLeft: 0,
-                        isMandatory: true,
-                        /*onEditComplete: (val) {
+                      hintTxt: "EOM",
+                      widthRatio: 0.16,
+                      controller: controller.eom,
+                      textFieldFN: controller.eomFN,
+                      // isTime: true,
+                      paddingLeft: 0,
+                      isMandatory: true,
+                      /*onEditComplete: (val) {
                           controller.calculateDuration();
-                        }*/),
+                        }*/
+                    ),
                     Obx(() => InputFields.formFieldDisable(
                           hintTxt: "Duration",
                           value: controller.duration.value,

@@ -1,3 +1,4 @@
+import 'package:bms_scheduling/widgets/LoadingDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -188,24 +189,35 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                               widthRatio: 0.17,
                                             )),
 
-                                        DropDownField.formDropDown1WidthMap(
-                                          controller
-                                                  .onloadModel
-                                                  ?.fillerMasterOnload
-                                                  ?.lstTapetypemaster ??
-                                              [],
-                                          (v) => controller
-                                              .selectedDropDowns[3] = v,
-                                          "Tape Type",
-                                          controller.componentWidthRatio,
-                                          selected:
-                                              controller.selectedDropDowns[3],
-                                          isMandatory: true,
-                                          inkWellFocusNode:
-                                              controller.tapeTypeFN,
-                                          dropdownOpen: (val) {
-                                            controller.isTapeTypOpen = val;
-                                          },
+                                        Obx(
+                                          () => DropDownField
+                                              .formDropDown1WidthMap2(
+                                            controller
+                                                    .onloadModel
+                                                    ?.fillerMasterOnload
+                                                    ?.lstTapetypemaster ??
+                                                [],
+                                            (val) {
+                                              if (val.type == "true") {
+                                                controller.selectedTapeType
+                                                    .value = val;
+                                              } else {
+                                                LoadingDialog.callErrorMessage1(
+                                                    msg:
+                                                        'Only HD & SD are allowed');
+                                              }
+                                            },
+                                            "Tape Type",
+                                            controller.componentWidthRatio,
+                                            selected: controller
+                                                .selectedTapeType.value,
+                                            isMandatory: true,
+                                            inkWellFocusNode:
+                                                controller.tapeTypeFN,
+                                            dropdownOpen: (val) {
+                                              controller.isTapeTypOpen = val;
+                                            },
+                                          ),
                                         ),
                                         DropDownField.formDropDown1WidthMap(
                                           controller
@@ -485,26 +497,27 @@ class FillerMasterView extends GetView<FillerMasterController> {
                                                 selected: controller
                                                     .selectedDropDowns[16],
                                               ),
-                                              DropDownField
-                                                  .formDropDown1WidthMap(
-                                                controller
-                                                        .onloadModel
-                                                        ?.fillerMasterOnload
-                                                        ?.lstProducerTape ??
-                                                    [],
-                                                (v) => controller
-                                                    .selectedDropDowns[17] = v,
-                                                "ID No",
-                                                controller.componentWidthRatio +
-                                                    .01,
-                                                selected: controller
-                                                    .selectedDropDowns[17],
-                                                isMandatory: true,
-                                                inkWellFocusNode: controller.idNoFN,
-                                                dropdownOpen: (v){
-                                                  controller.isIdOpen=v;
-                                                }
-                                              ),
+                                              DropDownField.formDropDown1WidthMap(
+                                                  controller
+                                                          .onloadModel
+                                                          ?.fillerMasterOnload
+                                                          ?.lstProducerTape ??
+                                                      [],
+                                                  (v) => controller
+                                                          .selectedDropDowns[17] =
+                                                      v,
+                                                  "ID No",
+                                                  controller
+                                                          .componentWidthRatio +
+                                                      .01,
+                                                  selected: controller
+                                                      .selectedDropDowns[17],
+                                                  isMandatory: true,
+                                                  inkWellFocusNode:
+                                                      controller.idNoFN,
+                                                  dropdownOpen: (v) {
+                                                controller.isIdOpen = v;
+                                              }),
                                             ],
                                           ),
                                           SizedBox(height: 10),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:bms_scheduling/app/controller/ConnectorControl.dart';
@@ -103,15 +104,21 @@ class RoBookingController extends GetxController {
   DropDownValue? selectedSecEvent;
   DropDownValue? selectedTriggerAt;
   DropDownValue? selectedPdc;
+  DropDownValue? selectedLocationSpot;
+  DropDownValue? selectedChannelSpot;
 
   String? dealProgramCode;
   String? dealStartTime;
   String? dealTelecastDate;
-  var bookingsummaryDefault = RxBool(false);
+  var bookingsummaryDefault = RxBool(true);
 
   RoBookingSaveCheckTapeId? savecheckData;
   bool showGstPopUp = true;
   int editMode = 0;
+  var isLocationChannel = true.obs;
+  var isAllEnable = true.obs;
+  var isAgencyLeave = true.obs;
+  var isAgainCall = false;
 
   int? bookingNoLeaveDealCurrentRow;
   String? bookingNoLeaveDealCurrentColumn;
@@ -182,14 +189,42 @@ class RoBookingController extends GetxController {
           if (data is Map && data.containsKey("info_RoBookingLoad")) {
             roBookingInitData =
                 RoBookingInitData.fromJson(data["info_RoBookingLoad"]);
+            selectedLocationSpot = DropDownValue(
+                value: roBookingInitData!.lstVerifiedLoationChannel!
+                    .lVerifiedLocations![0].locationname
+                    .toString(),
+                key: roBookingInitData!.lstVerifiedLoationChannel!
+                    .lVerifiedLocations![0].locationcode
+                    .toString());
+            selectedChannelSpot = DropDownValue(
+                value: roBookingInitData!
+                    .lstVerifiedLoationChannel!.lVerifiedChannel![0].channelName
+                    .toString(),
+                key: roBookingInitData!
+                    .lstVerifiedLoationChannel!.lVerifiedChannel![0].channelCode
+                    .toString());
             update(["init"]);
           }
         });
-    bookingNoFocus.addListener(() {
-      if (!bookingNoFocusNode.hasFocus && bookingNoCtrl.text.isNotEmpty) {
-        onBookingNoLeave();
-      }
-    });
+    // bookingNoFocus.addListener(() {
+    //   if (!bookingNoFocusNode.hasFocus && bookingNoCtrl.text.isNotEmpty) {
+    //     onBookingNoLeave();
+    //   }
+    // });
+    bookingNoFocus = FocusNode(
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.tab) {
+          if (bookingNoCtrl.text.isNotEmpty) {
+            onBookingNoLeave();
+            Timer(const Duration(milliseconds: 100), () {
+              onBookingNoLeave();
+            });
+            return KeyEventResult.ignored;
+          }
+        }
+        return KeyEventResult.ignored;
+      },
+    );
     refrenceFocus.addListener(() {
       if (!refrenceFocus.hasFocus && refNoCtrl.text.isEmpty) {
         LoadingDialog.callErrorMessage1(
@@ -400,7 +435,11 @@ class RoBookingController extends GetxController {
             //   key: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
             //   value: agencyLeaveData?.lstDealNumber?.first.dealNumber ?? "",
             // );
-
+            if (agencyLeaveData!.zoneCode != null &&
+                agencyLeaveData!.payroute != null) {
+              isAgencyLeave.value = false;
+              print("value===> ${isAllEnable.value}");
+            }
             zoneCtrl.text = agencyLeaveData?.zoneName ?? "";
             payrouteCtrl.text = agencyLeaveData?.payroute ?? "";
             bookingNoCtrl.text = agencyLeaveData?.bookingNumber ?? "";
@@ -1096,11 +1135,19 @@ class RoBookingController extends GetxController {
                 value["info_LeaveBookingNumber"]);
             bookingNoLeaveData?.lstdgvDealDetails =
                 bookingNoLeaveData?.lstdgvDealDetails?.where((e) {
+              print(e.recordnumber);
               var result = selectedDeal?.value == e.dealNumber.toString() &&
                   selectedLocation?.value == e.locationname.toString() &&
                   selectedChannel?.value == e.channelname.toString();
               return result;
             }).toList();
+            print(bookingNoLeaveData!.lstdgvDealDetails!.length);
+            update(["dealUpdate"]);
+            if (bookingNoLeaveData!.lstClientAgency != null &&
+                bookingNoLeaveData!.lstDealNumber != null) {
+              isAllEnable.value = false;
+              print("value===> ${isAllEnable.value}");
+            }
             if (bookingNoLeaveData == null) {
               LoadingDialog.showErrorDialog("info_LeaveBookingNumber was null");
               return;
@@ -1118,6 +1165,14 @@ class RoBookingController extends GetxController {
             selectedDeal = DropDownValue(
                 key: bookingNoLeaveData?.lstDealNumber?.first.dealNumber,
                 value: bookingNoLeaveData?.lstDealNumber?.first.dealNumber);
+            fpcEffectiveDateCtrl.text = (DateFormat("dd-MM-yyyy").format(
+                    DateFormat("MM/dd/yyyy HH:mm:ss")
+                        .parse(bookingNoLeaveData!.bookingEffectiveDate!)))
+                .toString();
+            bookDateCtrl.text = (DateFormat("dd-MM-yyyy").format(
+                    DateFormat("MM/dd/yyyy HH:mm:ss")
+                        .parse(bookingNoLeaveData!.bookingDate!)))
+                .toString();
             try {
               // selectedExecutive = DropDownValue(
               //     key: bookingNoLeaveData!.executiveCode,
@@ -1130,11 +1185,12 @@ class RoBookingController extends GetxController {
               try {
                 selectedExecutive = DropDownValue(
                   key: bookingNoLeaveData!.executiveCode,
-                  value: bookingNoLeaveData?.lstExcutiveDetails
-                      ?.firstWhere((element) =>
-                          element.personnelCode ==
-                          bookingNoLeaveData!.executiveCode)
-                      .personnelname,
+                  value: bookingNoLeaveData!.executiveName,
+                  // bookingNoLeaveData?.lstExcutiveDetails
+                  //     ?.firstWhere((element) =>
+                  //         element.personnelCode ==
+                  //         bookingNoLeaveData!.executiveCode)
+                  //     .personnelname,
                 );
               } catch (e) {
                 print(e.toString());
@@ -1142,7 +1198,7 @@ class RoBookingController extends GetxController {
             } catch (e) {
               print(e.toString());
             }
-            print('${selectedExecutive?.key}:${selectedExecutive?.value}');
+            // print('${selectedExecutive?.key}:${selectedExecutive?.value}');
             update(["init"]);
 
             refNoCtrl.text = bookingNoLeaveData!.bookingReferenceNumber ?? "";

@@ -386,6 +386,7 @@ class ProgramView extends StatelessWidget {
                         onload: (load) {
                           controller.programViewGrid = load.stateManager;
                         },
+                        enableAutoEditing: true,
                       ),
               )
             ],
