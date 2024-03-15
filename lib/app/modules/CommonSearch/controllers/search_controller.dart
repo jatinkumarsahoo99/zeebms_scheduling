@@ -1659,7 +1659,7 @@ class SearchController extends GetxController {
                       .searchCriteria = multiValue
                       .value
                       ? "in ${valueText.split(",").map((e) => "'${e.trim()}'")}"
-                      : "like %$valueText%";
+                      : "like \'%$valueText%\'";
                   updateGrid();
                   Get.back();
                 },
